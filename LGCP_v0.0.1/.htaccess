@@ -1,3 +1,4 @@
+AddType application/x-javascript .jsgz
 AddType application/wasm .wasmgz
 AddType text/plain .symbolsgz
 AddType application/octet-stream .memgz
