@@ -535,7 +535,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	function handleKeyDown( event ) {
+	/*function handleKeyDown( event ) {
 
 		//console.log( 'handleKeyDown' );
 
@@ -563,7 +563,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		}
 
-	}
+	}*/
 
 	function handleTouchStartRotate( event ) {
 
@@ -798,13 +798,13 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	function onKeyDown( event ) {
+	/*function onKeyDown( event ) {
 
 		if ( scope.enabled === false || scope.enableKeys === false || scope.enablePan === false ) return;
 
 		handleKeyDown( event );
 
-	}
+	}*/
 
 	function onTouchStart( event ) {
 
@@ -914,7 +914,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 	scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
 	scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
 
-	window.addEventListener( 'keydown', onKeyDown, false );
+	//window.addEventListener( 'keydown', onKeyDown, false );
 
 	// force an update at start
 
