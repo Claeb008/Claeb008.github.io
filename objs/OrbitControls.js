@@ -232,7 +232,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		scope.domElement.removeEventListener( 'touchmove', onTouchMove, false );
 
 		document.removeEventListener( 'mousemove', onMouseMove, false );
-		document.removeEventListener( 'mouseup', onMouseUp, false );
+		//document.removeEventListener( 'mouseup', onMouseUp, false );
 
 		//window.removeEventListener( 'keydown', onKeyDown, false );
 
@@ -673,7 +673,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( scope.enabled === false ) return;
 
-		event.preventDefault();
+		//event.preventDefault();
 
 		switch ( event.button ) {
 
