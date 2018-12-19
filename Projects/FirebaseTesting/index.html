@@ -1,0 +1,52 @@
+<html>
+<head>
+<style>
+iframe
+{
+    visibility: hidden;
+}
+#player
+{
+    position: absolute;
+    color: red;
+}
+#l2
+{
+    position: absolute;
+    color: green;
+}
+</style>
+</head>
+<body>
+    <p id="player">P</p>
+    <p id="l2">J</p>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
+<script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+<script src="main.js"></script>
+<script id="mod1">function som()
+{
+console.log("something");
+}
+som();</script>
+   
+    <p id="ppp">Test</p>
+    <p id="lx">0</p>
+    <p id="ly">0</p>
+    Rename Map: <input type="text">
+    <button onclick="ClearGame()">Clear Game</button>
+    <button onclick="CreateGame()">Create New Game</button>
+    <button onclick="OpenGame()">Open Existing Game</button>
+    <input id="i_OpenGame">
+    <!-- The surrounding HTML is left untouched by FirebaseUI.
+     Your app may use that space for branding, controls and other customizations.-->
+<h1>Welcome to My Awesome App</h1>
+<div id="firebaseui-auth-container"></div>
+<div id="loader">Loading...</div>
+    
+    <br><br><textarea id="script_box">function Move(){x += 5; y += 1}setInterval(Move,100); player.style.color = "green";</textarea>
+    <iframe id="ibox"></iframe>
+</body>
+</html>
