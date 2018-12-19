@@ -157,8 +157,8 @@ window.addEventListener("keydown",function(event)
 
 function Update()
 {
-	lx.innerHTML = x;
-    ly.innerHTML = y;
+	//lx.innerHTML = x;
+    //ly.innerHTML = y;
     player.style.marginTop = y + "px";
     //player.style = "margin-left: " + x + "px;";
     player.style.marginLeft = x + "px";
