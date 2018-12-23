@@ -27,18 +27,18 @@ var player2 = {
 
   // Get a reference to the database service
   var database = firebase.database();
-  
+
 /*firebase.database().ref('maps/' + "Fortaan").set({
     name: "Fortaan123",
     source: "0,0,0",
     author: "Claeb"
-    
+
   });*/
-  
+
   var mapsRef = firebase.database().ref('maps/');
   console.log(mapsRef.length);
-  
-  
+
+
   firebase.database().ref('maps/' + "Fortaan").once('value').then(function(snapshot) {
   var username = (snapshot.val() && snapshot.val().name) || 'Anonymous';
   // ...
@@ -84,8 +84,8 @@ mapsRef.once('value', function(snapshot) {
     console.log(childKey);
     firebase.database().ref("maps/" + childKey).update({
     	author: "Claeb Hero"
-        
-    	
+
+
     });
     // ...
   });
@@ -96,7 +96,7 @@ window.addEventListener("keydown",function(event)
 	const key = event.key;
 	if(key == "Enter")
     {
-    	
+
     	console.log(firebase.database().ref('maps/' + "test").exists);
     	firebase.database().ref('maps/' + "test").child("child doc").update(
         {
@@ -120,13 +120,13 @@ window.addEventListener("keydown",function(event)
         //document.scripts[4].innerHTML += document.getElementById("script_box").value;
         //console.log(document.scripts[4].innerHTML);
         som();
-        
+
         var script = document.createElement("script");
 		script.type = "text/javascript";
     	//script.src = "//myapp.disqus.com/embed.js";
         script.onload = function()
         {
-        	
+
         	for(i=0;i<10;i++)
             {
             	console.log("this is amzing" + i);
@@ -139,12 +139,12 @@ window.addEventListener("keydown",function(event)
     	document.body.appendChild(script);
         //document.scripts[6].innerHTML += "console.log('just extra');";
         //console.log(document.scripts[6].innerHTML);
-        
+
 
         //script.innerHTML += "function Hello222(){console.log('i want this to work so bad');}";
         //var node = document.body.removeChild(document.scripts[6]);
         //document.body.appendChild(node);
-        
+
     }
     if(key == "r")
     {
@@ -152,7 +152,7 @@ window.addEventListener("keydown",function(event)
         //Hello111();
         //Hello222();
     }
-    
+
 });
 
 function Update()
@@ -162,14 +162,14 @@ function Update()
     player.style.marginTop = y + "px";
     //player.style = "margin-left: " + x + "px;";
     player.style.marginLeft = x + "px";
-    
+
     player2.l.style.marginTop = player2.y + "px";
     player2.l.style.marginLeft = player2.x + "px";
 }
 setInterval(Update,20);
   /*
-  
-    
+
+
   var citiesRef = db.collection("cities");
 
 citiesRef.doc("SF").set({
@@ -192,11 +192,11 @@ citiesRef.doc("BJ").set({
     name: "Beijing", state: null, country: "China",
     capital: true, population: 21500000,
     regions: ["jingjinji", "hebei"] });
-  
+
   */
-  
-  
-  
+
+
+
   ////////LGCP testing stuffs
   var newGameRef;
   function CreateGame()
@@ -213,7 +213,7 @@ citiesRef.doc("BJ").set({
         }
         else alert("You have already made a new game!");
   }
-  
+
   function OpenGame()
   {
   		var ibox = document.getElementById("i_OpenGame");
@@ -225,13 +225,13 @@ citiesRef.doc("BJ").set({
                 curMoves: 0,
                 moveAmt: 0,
                 charID: 0
-            
+
             }
-        
+
         });
   }
-  
-  
+
+
 
 
 function ClearGame()
@@ -321,4 +321,3 @@ ui.start('#firebaseui-auth-container', {
 
 // The start method will wait until the DOM is loaded.
 ui.start('#firebaseui-auth-container', uiConfig);
-  
