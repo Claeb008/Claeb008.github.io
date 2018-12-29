@@ -90,7 +90,6 @@ mapsRef.once('value', function(snapshot) {
     // ...
   });
 });
-
 window.addEventListener("keydown",function(event)
 {
 	const key = event.key;
@@ -229,6 +228,7 @@ citiesRef.doc("BJ").set({
             }
 
         });
+				var something123 = new TRHEE.Object3D("something123");
   }
 
 

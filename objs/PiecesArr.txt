@@ -1,0 +1,43 @@
+["Tile.obj","2by1Plate_Stud.obj"],
+    ["1by1Plate.obj","1by2Plate.obj","1by3Plate.obj","1by4Plate.obj"],
+    ["2by2Plate.obj","2by3Plate.obj","2by4Plate.obj","2by6Plate.obj"],   ["1by1Brick.obj","1by2Brick.obj","1by3Brick.obj","1by4Brick.obj","1by6Brick.obj","1by8Brick.obj","1by10Brick.obj","1by12Brick.obj"],//"1by16Brick.obj"],
+    ["2by2Brick.obj","2by3Brick.obj","2by4Brick.obj","2by6Brick.obj","2by8Brick.obj","2by10Brick.obj"],
+    ["4by4Plate.obj","6by6Plate.obj","8by8Plate.obj"],
+    ["1by3Brick_Bow.obj","1by4Brick_Bow.obj","1by4Brick_Bow_2Tall.obj"],
+    ["2by1Door.obj","2by1Door_Gate.obj","2by1Door_ShutterGate.obj"],
+    ["1by1PlateRound.obj","1by1BrickRound.obj","1by1Cone.obj","2by2FlatCone.obj"],
+    ["1by1Tile.obj"],
+    ["Fire.obj","Feather.obj"],
+    ["1by1Slope.obj","1by1Slope2Sided.obj","1by1Slope4Sided.obj","1by2SlopeWithPlate.obj","1by2Slope.obj","1by2BrickWSlope.obj","2by2BrickW2Slopes_Corner.obj","2by2BrickWInverted2Slopes.obj","2by2BrickWSlope.obj","2by3BrickWSlope.obj","2by4BrickWSlope.obj","2by6BrickWSlope.obj","3by1BrickWSlope_25.obj","3by2BrickWSlope_25.obj","4by6BrickW2Slopes.obj","1by2RidgedTile.obj","1by2Slope2Tall.obj","2by2Slope2Tall.obj","1by2Slope3Tall.obj","2by2Slope3Tall.obj"],
+    ["1by2Slope_Inv.obj","2by2Slope_Inv.obj","1by3Slope_Inv.obj","2by3Slope_Inv.obj","1by2Slope3Tall_Inv.obj"],
+    ["StickAerial.obj"],
+    
+    [
+    "Arch1x6x1WEdge.obj",
+    "Brick1x1WHolder-Side.obj",
+    "Brick1x2WHole.obj",
+    "Brick2x2Dome.obj",
+    "BrickCurved2x2.obj", // 4
+    "BrickWArch1x1.obj",
+    "Butt.obj",
+    "DorsalFin.obj",
+    "FacetBrick3x3x1.obj", // 8
+    "FenceWBars.obj", // 9
+    "FlatTile1x2.obj",
+    "Frog.obj", // 11
+    "HornSmall.obj",
+    "MinifigBackPlateWKnob.obj",
+    "PalisadeBrick1x2.obj",
+    "Plate1x1WHolder-Side.obj", // 15
+    "Plate1x1WTooth.obj",
+    "Plate1x2WSlide.obj",
+    "Plate2x2Round.obj",
+    "PlateWBows2x2.obj", // 19
+    "PyramidBrick2x2x2x73.obj",
+    "RadiatorGrill.obj",
+    "SlideHandle.obj",
+    "SteeringWheelSmall.obj",
+    "Streamer.obj",
+    "StudW4Points-Flower.obj",
+    "Turkey-Drumstick.obj"
+    ]
