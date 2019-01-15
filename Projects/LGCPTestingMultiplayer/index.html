@@ -1,0 +1,33 @@
+<html>
+<body>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
+  <script src="https://claeb008.github.io/js/three.js"></script>
+  <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://claeb008.github.io/js/threex.domevent.js"></script>
+  <script src="https://claeb008.github.io/objs/OrbitControls.js"></script>
+  <style>
+    canvas
+    {
+      border: solid 1px lightgray;
+    }
+    #pbox
+    {
+      position: absolute;
+    }
+    body
+    {
+      background-color: lightgray;
+    }
+  </style>
+
+<button onclick="ClearGame()">Clear Game (works in previous version but is currently broken)</button>
+<button onclick="JoinGame()">Join Game</button>
+<button onclick="LeaveGame()">Leave Game</button>
+<input type="color" id="c">
+<div id="pBox"></div>
+
+<script src="main.js"></script>
+</body>
+</html>

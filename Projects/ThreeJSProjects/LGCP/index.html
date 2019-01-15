@@ -1,0 +1,40 @@
+<html>
+<body>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
+<script src="https://claeb008.github.io/js/three.js"></script>
+<script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://claeb008.github.io/js/threex.domevent.js"></script>
+<script src="https://claeb008.github.io/objs/OrbitControls.js"></script>
+<style src="main.css"></style>
+    <div style="margin: 0;">
+    <button onclick="ImportObj(0)">Add Obj</button>
+    <button onclick="ImportObj(2)">Add Obj Rel</button>
+        <input type="text" id="obj_loc">
+        <input type="number" id="obj_loc_rel1" style="width: 55px;">
+        <input type="text" id="map_loc">
+        <input type="color" id=obj_col>
+        <button onclick="MoveObj()">Press</button>
+        <button onclick="LoadMapPieces()">Load Map</button>
+        <button onclick="SaveMap()">Save Map</button>
+        <button onclick="LogIn()">Log In</button>
+        <button onclick="LogOut()">Log Out</button>
+        <span id="p_Username">No User</span>
+        <img src="" id="p_photo" style="width: 20px; height: 20px; border-radius: 50%; top: 0; bottom: 0; margin-top: 4px; margin-left: 5px; position: absolute">
+        <span id="l_playerID" style="margin-left: 35px;">-</span>
+        </div>
+
+        <p style="position: absolute; margin-top: 25px; margin-left: 25px; color: white">Roll: <span id="l_curMoves">0</span> / <span id="l_moveAmt">0</span></p>
+        <p style="position: absolute; margin-top: 25px; margin-right: 25px; color: white; right: 0;">Press R to roll</p>
+        <button style="position: absolute; margin-left: -710px; margin-top: 100px;">Roll</button>
+
+
+        <div id="candiv"></div>
+
+        <div id="t_settings"><button id="b_settings">Settings</button>
+        <div id="p_settings"><button onclick="MB(0,0)">Shadow Map Resolution: </button><input type="number" id="i_smr"><button onclick="MB(0,1)">Shadow Map Size: </button><input type="number" id="i_sms"><button onclick="ClearGame()">Clear Game</button><button onclick="OpenGame()">Open Game</button><button onclick="ResumeGame()">Resume Game</button><button onclick="JoinGame()">Join Game</button><input id="i_OpenGame"><button onclick="AllowJoin()">AllowJoin</button><button onclick="SetPlayerID()">Set Player ID</button><input id="i_SetPlayerID"></div></div>
+
+        <script src="main.js"></script>
+</body>
+</html>
