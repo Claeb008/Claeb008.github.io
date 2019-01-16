@@ -24,9 +24,46 @@ var gSnap;
   playerAmt: 0
 });*/
 newGameRef.on('value',function(snap){
+  if(gSnap != snap)
+  {
+    //alert("NOW!!!!");
+    updated = true;
+  }
   gSnap = snap;
-  updated = true;
+
 });
+
+
+function LoadGame()
+{
+  newGameRef.once('value',function(snap){
+    gSnap = snap;
+
+
+
+  for(i = 0; i < gSnap.val().playerAmt; i++)
+  {
+    var player_d = document.createElement('p');
+    player_d.innerHTML = "P";
+    player_d.style = "color: blue;";
+    document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
+    //var i = players.push(player_d);
+
+    players[i] = player_d;
+    //i--;
+    console.log(i);
+    newGameRef.child('players/p' + (i)).on('value',function(snap){
+      //alert(i);
+      //alert(snap.key);
+      if(snap.child('x').exists() && players[i])
+      {
+        players[i].style.marginLeft = snap.val().x;
+        players[i].style.color = snap.val().color;
+      }
+    });
+  }
+  });
+}
 
 newGameRef.child('players').on('child_added',function(snap){
   //newGameRef.once('value',function(snap2){
@@ -34,7 +71,13 @@ newGameRef.child('players').on('child_added',function(snap){
   if(!updated) return;
   //else if(!snap.child('x').exists()) return;
   //alert(snap.key);
-  var i = gSnap.val().playerAmt;
+
+
+
+  ///////var i = gSnap.val().playerAmt;
+  var i = snap.key.substr(1,snap.key.length - 1);
+
+
   if(players[i])
   {
     //alert("Wait");
@@ -55,7 +98,6 @@ newGameRef.child('players').on('child_added',function(snap){
     if(snap.child('x').exists() && players[i])
     {
       players[i].style.marginLeft = snap.val().x;
-      players[i].style.marginTop = snap.val().y;
       players[i].style.color = snap.val().color;
     }
   });
@@ -142,8 +184,7 @@ function LeaveGame()
 
 document.addEventListener('keydown',function(e){
   var key = e.key;
-  if(key == "ArrowLeft" || key == "ArrowRight") newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
-  if(key == "ArrowUp" || key == "ArrowDown") newGameRef.child('players/p' + playerID).update({y: gSnap.child('players/p' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
+  if(key == "d" || key == "a") newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "d" ? 10 : -10)});
   //if(key == "a") console.log(players);//players[0].style.marginLeft += 10;
 });
 
@@ -158,81 +199,3 @@ function Update()
 
 }
 setInterval(Update,20);
-
-//NETWORKING
-
-var user;
-
-var provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({
-'login_hint': 'user@example.com'
-});
-function LogIn()
-{
-  console.log("loggingIN");
-firebase.auth().signInWithPopup(provider).then(function(result) {
-
-// This gives you a Google Access Token. You can use it to access the Google API.
-var token = result.credential.accessToken;
-// The signed-in user info.
-var user = result.user;
-console.log(user);
-// ...
-}).catch(function(error) {
-// Handle Errors here.
-var errorCode = error.code;
-var errorMessage = error.message;
-// The email of the user's account used.
-var email = error.email;
-// The firebase.auth.AuthCredential type that was used.
-var credential = error.credential;
-// ...
-});
-}
-
-function LogOut()
-{
-if(!user)
-  {
-    return;
-  }
-
-firebase.auth().signOut().then(function() {
-// Sign-out successful.
-console.log("sign out successful");
-}).catch(function(error) {
-// An error happened.
-console.log("error signing out");
-});
-}
-
-
-
-
-firebase.auth().onAuthStateChanged(function(user1) {
-if (user1) {
-  // User is signed in.
-  console.log("this user is signed in");
-  document.getElementById("p_Username").innerHTML = user1.displayName;
-  document.getElementById("p_photo").src = user1.photoURL;
-  console.log(user1);
-  user = user1;
-
-       var userRef = firebase.database().ref('users/' + user1.uid);
-       userRef.once('value').then(function(snap){
-           userRef.update({
-        loginTimes: snap.child('loginTimes').val() + 1//parseInt(snap.val()) + 1
-
-      });
-
-       });
-
-} else {
-  // No user is signed in.
-  console.log("no user in");
-  document.getElementById("p_Username").innerHTML = "no user";
-}
-
-});
-user = firebase.auth().currentUser;
-if(user)console.log(user);
