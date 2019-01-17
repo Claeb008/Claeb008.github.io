@@ -64,6 +64,39 @@ newGameRef.on('value',function(snap){
   });
 });*/
 
+firebase.auth().onAuthStateChanged(function(user1) {
+if (user1) {
+  // User is signed in.
+  console.log("this user is signed in");
+  document.getElementById("p_Username").innerHTML = user1.displayName;
+  document.getElementById("p_photo").src = user1.photoURL;
+  console.log(user1);
+  user = user1;
+
+       var userRef = firebase.database().ref('users/' + user1.uid);
+       userRef.once('value').then(function(snap){
+           userRef.update({
+        loginTimes: snap.child('loginTimes').val() + 1//parseInt(snap.val()) + 1
+
+      });
+
+       });
+
+} else {
+  // No user is signed in.
+  console.log("no user in");
+  document.getElementById("p_Username").innerHTML = "no user";
+}
+
+});
+user = firebase.auth().currentUser;
+if(user)console.log(user);
+
+
+
+
+
+
 newGameRef.child('players').on('child_added',function(snap){
   //newGameRef.once('value',function(snap2){
   //alert(snap2.val().playerAmt);
@@ -275,34 +308,3 @@ console.log("sign out successful");
 console.log("error signing out");
 });
 }
-
-
-
-
-firebase.auth().onAuthStateChanged(function(user1) {
-if (user1) {
-  // User is signed in.
-  console.log("this user is signed in");
-  document.getElementById("p_Username").innerHTML = user1.displayName;
-  document.getElementById("p_photo").src = user1.photoURL;
-  console.log(user1);
-  user = user1;
-
-       var userRef = firebase.database().ref('users/' + user1.uid);
-       userRef.once('value').then(function(snap){
-           userRef.update({
-        loginTimes: snap.child('loginTimes').val() + 1//parseInt(snap.val()) + 1
-
-      });
-
-       });
-
-} else {
-  // No user is signed in.
-  console.log("no user in");
-  document.getElementById("p_Username").innerHTML = "no user";
-}
-
-});
-user = firebase.auth().currentUser;
-if(user)console.log(user);
