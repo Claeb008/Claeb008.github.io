@@ -188,7 +188,9 @@ function JoinGame()
   newGameRef.child('players/p' + gSnap.val().playerAmt).update({
     color: "blue",
     x: 50,
-    y: 50
+    y: 50,
+    user: user.uid,
+    name: username
   });
   newGameRef.update({
     playerAmt: gSnap.val().playerAmt + 1
