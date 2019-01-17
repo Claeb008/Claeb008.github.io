@@ -3,3 +3,8 @@ canvas
   border: solid 1px black;
 }
 p{color: red;}
+#p_photo
+{
+  width: 20px;
+  height: 20px;
+}
