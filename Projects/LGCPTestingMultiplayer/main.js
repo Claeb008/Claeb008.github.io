@@ -28,13 +28,9 @@ newGameRef.on('value',function(snap){
   updated = true;
 });
 
-newGameRef.child('players').on('child_added',function(snap){
-  //newGameRef.once('value',function(snap2){
-  //alert(snap2.val().playerAmt);
-  if(!updated) return;
-  //else if(!snap.child('x').exists()) return;
-  //alert(snap.key);
-  var i = gSnap.val().playerAmt;
+/*newGameRef.child('players').once('value',function(snap){
+  var i = snap.key.substr(1,snap.key.length - 1));
+
   if(players[i])
   {
     //alert("Wait");
@@ -49,6 +45,63 @@ newGameRef.child('players').on('child_added',function(snap){
   players[i] = player_d;
   //i--;
   console.log(i);
+
+  if(user)
+  {
+    if(snap.user == user.uid) playerID = i;
+  }
+
+  newGameRef.child('players/p' + (i)).on('value',function(snap){
+    //alert(i);
+    //alert(snap.key);
+    if(snap.child('x').exists() && players[i])
+    {
+      players[i].style.marginLeft = snap.val().x;
+      players[i].style.marginTop = snap.val().y;
+      players[i].style.color = snap.val().color;
+    }
+  });
+});*/
+
+newGameRef.child('players').on('child_added',function(snap){
+  //newGameRef.once('value',function(snap2){
+  //alert(snap2.val().playerAmt);
+  var i;
+  //if(!updated)
+  //{
+    //return;
+    i = snap.key.substr(1,snap.key.length - 1));
+
+
+  //}
+  //else
+  //{
+
+  //}
+  //else if(!snap.child('x').exists()) return;
+  //alert(snap.key);
+
+  //i = gSnap.val().playerAmt;
+  if(players[i])
+  {
+    //alert("Wait");
+    return;
+  };
+  var player_d = document.createElement('p');
+  player_d.innerHTML = "P";
+  player_d.style = "color: blue;";
+  document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
+  //var i = players.push(player_d);
+
+  players[i] = player_d;
+  //i--;
+  console.log(i);
+
+  if(user)
+  {
+    if(snap.user == user.uid) playerID = i;
+  }
+
   newGameRef.child('players/p' + (i)).on('value',function(snap){
     //alert(i);
     //alert(snap.key);
@@ -77,6 +130,12 @@ newGameRef.child('players').on('child_removed',function(snap){
 
 function AddPlayer()
 {
+  if(!user)
+  {
+    alert("Please Log In First!");
+    return;
+  }
+
   if(!updated)
   {
     alert("Wait first");
@@ -88,7 +147,8 @@ function AddPlayer()
   newGameRef.child('players/p' + gSnap.val().playerAmt).update({
     color: "blue",
     x: 50,
-    y: 50
+    y: 50,
+    user: user.uid;
   });
   newGameRef.update({
     playerAmt: gSnap.val().playerAmt + 1
