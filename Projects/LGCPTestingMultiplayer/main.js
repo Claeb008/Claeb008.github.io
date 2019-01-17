@@ -70,7 +70,7 @@ newGameRef.child('players').on('child_added',function(snap){
   //if(!updated)
   //{
     //return;
-    i = snap.key.substr(1,snap.key.length - 1));
+    i = snap.key.substr(1,snap.key.length - 1);
 
 
   //}
