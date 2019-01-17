@@ -6,6 +6,7 @@ var players = [];
 var playerID = -1;
 var updated = false;
 var c = document.getElementById("c");
+var username = "Bob";
 
 var config = {
   apiKey: "AIzaSyDfIFP4ZgQct3tg3jtvKqCaRR8V8kbVmTw",
@@ -101,6 +102,10 @@ newGameRef.child('players').on('child_added',function(snap){
   {
     if(snap.user == user.uid) playerID = i;
   }
+  else if(username != "")
+  {
+    if(username == user.name) playerID = i;
+  }
 
   newGameRef.child('players/p' + (i)).on('value',function(snap){
     //alert(i);
@@ -148,7 +153,8 @@ function AddPlayer()
     color: "blue",
     x: 50,
     y: 50,
-    user: user.uid;
+    user: user.uid,
+    name: username
   });
   newGameRef.update({
     playerAmt: gSnap.val().playerAmt + 1
@@ -215,6 +221,8 @@ function Update()
       color: c.value,
     });
   }
+
+  if(username != document.getElementById('name_i').innerHTML) username = document.getElementById('name_i').innerHTML;
 
 }
 setInterval(Update,20);
