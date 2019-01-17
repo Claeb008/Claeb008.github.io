@@ -6,7 +6,7 @@ var players = [];
 var playerID = -1;
 var updated = false;
 var c = document.getElementById("c");
-var username = "Bob";
+var username = "";
 
 var config = {
   apiKey: "AIzaSyDfIFP4ZgQct3tg3jtvKqCaRR8V8kbVmTw",
