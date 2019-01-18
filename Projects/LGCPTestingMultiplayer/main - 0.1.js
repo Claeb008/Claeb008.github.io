@@ -36,7 +36,6 @@ var gSnap;
   playerAmt: 0
 });*/
 newGameRef.on('value',function(snap){
-  if(snap != gSnap) document.getElementById('loading_l').style = "visibility: hidden;";
   gSnap = snap;
   updated = true;
 });
