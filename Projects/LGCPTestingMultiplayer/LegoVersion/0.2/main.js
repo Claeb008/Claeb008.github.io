@@ -247,25 +247,11 @@ function LeaveGame()
     //playerAmt: gSnap.val().playerAmt - 1
   });
 }
-var mScale = 20;
-var ax = 0;
-var ay = 0;
-var area = document.getElementById('area');
+
 document.addEventListener('keydown',function(e){
   var key = e.key;
   if(key == "ArrowLeft" || key == "ArrowRight") newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
   if(key == "ArrowUp" || key == "ArrowDown") newGameRef.child('players/p' + playerID).update({y: gSnap.child('players/p' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
-
-  if(key == "d" || key == "a")
-  {
-    ax += (key == "d" ? -mScale : mScale);
-    area.style.marginLeft = ax;
-  }
-  if(key == "w" || key == "s")
-  {
-    ay += (key == "w" ? mScale : -mScale);
-    area.style.marginTop = ay;
-  }
   //if(key == "a") console.log(players);//players[0].style.marginLeft += 10;
 });
 
@@ -348,200 +334,6 @@ function LeaveGameOnline()
   }
 }
 
-//LOAD BASIC DATA
-var usableObjsLocs,usableColors = [],mainPieces = [], uo;
-firebase.database().ref('objLocs2D/').once('value',function(snap){
-  uo = snap;
-  /*for(i2 = 0; i2 < snap.val().length; i2++){
-    uo.push();
-  for(i = 0; i < snap.child(i2).val().length; i++)
-  {
-    var o = snap.child(i2).child(i);
-    var o1 =
-    {
-      p:
-      {
-        left: o.val().p.left,
-        top: o.val().p.top
-      },
-      gom:
-      {
-        width: o.val().gom.width,
-        height: o.val().gom.height
-      }
-    };
-    //usableObjsLocs.push(snap.child(i).val());
-  }}*/
- // usableObjsLocs.push();
- alert(uo);
-
-});
-firebase.database().ref('colors/').once('value',function(snap){
-  for(i = 0; i < snap.val().length; i++)
-  {
-    usableColors.push({color: snap.child(i).val().color, op: snap.child(i).val().op + 0.25, reflect: (snap.child(i).val().reflect)});//new colors(snap.child(i).val().color,snap.child(i).val().op));
-
-  }
-  alert(usableColors[1].color);
-  console.log("LOAD COLORS COMPLETE");
-  //alert(usableColors[16].reflect);
-  //alert(usableColors[0].reflect);
-});
-
-
-function colors(color,op)
-{
-  this.color = color;
-  this.op = op;
-}
-var map,res,prop,pieceIds;
-//LOAD MAP
-function LoadMap()
-{
-  map = document.getElementById("map_loc").value;
-  res = map.split("&");
-
-  for(i = 0; i < res.length; i++)
-  {
-    var prop = res[i].split(",");
-      //if(!pieceIds.includes(prop[0])) pieceIds.push(prop[0]);
-  }
-  console.log("FINISHED ADDING TO PIECESIDS ARRAY");
-  console.log(pieceIds);
-
-
-  for(i = 0; i < res.length; i++)
-  {
-    console.log(i);
-    var prop = res[i].split(",");
-
-      var mid = prop[0].split(".");
-
-      //if(usableObjs[mid[0]][mid[1]])
-      //if(mid[0] == "0")
-      if(uo.child(mid[0]).child(mid[1]).exists())
-      {
-        var o = uo.child(mid[0]).child(mid[1]).val();
-      //ImportPiece("https://Claeb008.github.io/objs/" + prop[0] + "/" + usableObjsLocs[prop[0]][prop[1]], prop[2], prop[3], prop[4], 2);
-      var colObj = usableColors[parseInt(prop[(prop[4] == "'" ? 5 : 7)])];
-      if(!colObj) colObj = new colors("gray",100);
-      var head = document.createElement('div');
-      var gom = document.createElement('div');
-      //var go = document.createElement('p');
-      //go.innerHTML = "o";
-      ////////if(mid[1] == "1") go.style = "margin-left: 3.3px; margin-top: 6px;";
-      //go.style = "margin-left: " + o.p.left + "px; margin-top: " + o.p.top + "px;";
-      //gom.appendChild(go);
-      head.appendChild(gom);
-      head.style = "position: absolute;"; //transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);";
-      gom.style = "transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);" + "position: absolute;";//width: " + o.gom.width + "px; height: " + o.gom.height + "px;"; //background-color: " + (colObj.color.startsWith("0") ? "#" + colObj.color.substr(2,6) : colObj.color) + ";";
-      gom.innerHTML = o.src;//'<svg id="s" width="15px" height="30px"><rect id="r" width="15px" height="30px" style="fill:#ff0000;" /><circle cx="7.5" cy="15" r="4" stroke="rgb(0,0,0)" stroke-width="1" fill-opacity="0" stroke-opacity="0.3" /></svg>';
-
-      //if(prop[4] != "'" && prop[6] != "0") head.style += " transform: rotate(" + prop[6] + "deg);";
-      //gom.style += " transform: rotate(45deg);";
-      if(mid[0] == "5") console.log("begin");
-      if(mid[0] == "5")
-      {
-        for(h = 0; h < 4; h++) //o.cir.h
-        {
-          console.log("h: " + h);
-          for(v = 0; v < 4; v++)
-          {
-            console.log("v: " + v);
-            var num_h = (h * 15 + 7.5);//((o.cir.h * 15) / 2);
-            var num_v = (v * 15 + 7.5);
-            gom.innerHTML += '<circle cx="' + num_h + '" cy="' + num_v + '" r="4" stroke="rgb(0,0,0)" stroke-width="1" fill-opacity="0" stroke-opacity="0.3" />';
-          }
-        }
-        gom.innerHTML += "</svg>";
-      }
-      else
-      {
-        if(mid[0] == "5") console.log("false and end");
-      }
-      //"color: black; position: absolute; width: 10px; height: 10px; background-color: red"; //(colObj.color.startsWith("0") ? parseInt(colObj.color) : colObj.color);
-      document.getElementById('area').appendChild(head);
-      document.getElementById('r').style.fill = (colObj.color.startsWith("0") ? "#" + colObj.color.substr(2,6) : colObj.color);
-      document.getElementById('r').id = "l";
-
-      /*if(mid[1] == "1")
-      {
-        go.style.marginLeft = gom.style.width / 9;
-        gom.style.width = 15;
-
-      }
-      go.style.marginLeft = (gom.style.width / 3);*/
-
-      //var go = //new THREE.Mesh(usableObjs[mid[0]][mid[1]].geometry, new THREE.MeshPhongMaterial({envMap: cubeMap,color: (colObj.color.startsWith("0") ? parseInt(colObj.color) : colObj.color),transparent: (colObj.op < 1),opacity: colObj.op,reflectivity: (colObj.reflect ? 1 : 0.55),specular: 0xaaaaaa,shininess: 10}));//,roughness: (colObj.reflect ? 0 : 0.1)})); // 5 //specular: 0x222222,shininess: 50 //5
-      //go.position.set(parseInt(prop[1]) * 4, parseInt(prop[3]) * 4, parseInt(prop[2]) * 4); // 2, 3, 4
-      head.style.marginLeft = parseFloat(prop[1]) * 1.5 + 1000 + (o.off ? o.off.left : 0);
-      head.style.marginTop = parseFloat(prop[2]) * 1.5 + 500 + (o.off ? o.off.top : 0);
-      head.style.zIndex = parseFloat(prop[3]);
-
-
-      if(prop[4] != "'")
-      {
-           //go.rotateAroundWorldAxis(new THREE.Vector3(1,0,0), parseFloat(prop[4]) * Math.PI/180);
-           //go.rotateAroundWorldAxis(new THREE.Vector3(0,1,0), -parseFloat(prop[6]) * Math.PI/180);
-           //go.rotateAroundWorldAxis(new THREE.Vector3(0,0,1), parseFloat(prop[5]) * Math.PI/180);
-          //if(go.rotation.y != 0 && go.rotation.z != 0)
-          {
-            //var x = go.rotation.x;
-            //var z = go.rotation.z;
-            //var y = go.rotation.y;
-            //go.rotation.y = z;
-            //go.rotation.x = -z;
-            //go.rotation.z = x;
-              //console.log(go.rotation.z);
-               //go.rotation.z *= -1;
-               //console.log(go.rotation.z);
-
-          }
-          //go.rotation.set(-45 * Math.PI / 180,0 * Math.PI / 180,0 * Math.PI / 180);
-          //go.rotateZ(parseFloat(prop[]));
-          //go.rotation.z *= (parseFloat(prop[5]) >= 0 ? -1 : 1)// 4, 5, 6 //45 * Math.PI / 180
-      }
-
-
-
-      //mainPieces.push([parseInt(prop[0]),parseInt(prop[1]),parseInt(prop[2]),parseInt(prop[3]),parseInt(prop[4]),parseInt(prop[5]), /*Tiles*/ parseInt(prop[6]),parseInt(prop[7])]);
-      mainPieces.push(prop);
-      head.props = prop;
-
-      //var str = pieces.push(go);
-
-      }
-
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //NETWORKING
 
@@ -618,3 +410,120 @@ if (user1) {
 });
 user = firebase.auth().currentUser;
 if(user)console.log(user);
+
+
+
+
+
+
+
+
+
+//TRHEEJS
+
+
+var container = document.getElementById("candiv");
+
+camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
+camera.position.z = 250;
+scene = new THREE.Scene();
+scene.add(camera);
+
+var light2 = new THREE.AmbientLight( 0xffffff, 0.7 ); // 0.2 // soft white light // 0xffff60
+       scene.add( light2 );
+
+renderer = new THREE.WebGLRenderer({ antialias: true});
+renderer.setPixelRatio( window.devicePixelRatio );
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.soft = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+renderer.shadowCameraNear = 3;
+renderer.shadowCameraFar = camera.far;
+renderer.shadowCameraFov = 50;
+
+renderer.shadowMap.bias = 0.0039;
+renderer.shadowMap.darkness = 0.3;
+renderer.shadowMapWidth = 2048;
+renderer.shadowMapHeight = 2048;
+
+container.appendChild( renderer.domElement );
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+var controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+function onWindowResize() {
+
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+function animate()
+{
+	requestAnimationFrame( animate );
+	render();
+}
+
+function render()
+{
+	renderer.render( scene, camera );
+}
+
+
+
+var floorGeo = new THREE.BoxBufferGeometry(1000,1,1000);
+var floorMat = new THREE.MeshPhongMaterial({color: 0xffffff});
+var floor = new THREE.Mesh(floorGeo, floorMat);
+floor.position.set(0,-16,0);
+floor.receiveShadow = true;
+scene.add(floor);
+
+var player = floor;
+
+directionalLight = new THREE.DirectionalLight( 0xffffff, 0.65);
+                 //scene.add(directionalLight);
+//player.add(directionalLight);
+//directionalLight.position.set( 1, 3, 2 ).normalize();
+ //directionalLight.rotation.set(0,0,80);
+     directionalLight.castShadow = true;
+           //directionalLight.position.x = -75;
+directionalLight.position.y = 450;
+//directionalLight.position.z = -110;
+directionalLight.target = player;//new THREE.Object3D();
+//directionalLight.target.position.set(150,0,0);
+     directionalLight.shadow.camera.left = -450.5; //default is 450.5
+directionalLight.shadow.camera.right = 450.5;
+directionalLight.shadow.camera.top = 450.5;
+directionalLight.shadow.camera.bottom = -450.5;
+     directionalLight.shadowMapWidth = 2048;
+directionalLight.shadowMapHeight = 2048;
+     directionalLight.shadow.camera.far = 2000;
+     directionalLight.shadow.camera.near = -1000;
+     //directionalLight.shadow.camera.width = 1024;
+//directionalLight.shadow.camera.height = 1024;
+     //var dl = new THREE.CameraHelper( directionalLight.shadow.camera );
+//scene.add( directionalLight );
+     //scene.add(dl);
+     scene.add(directionalLight);
+     directionalLight.position.set( player.position.x - 1, player.position.y + 4, player.position.z - 2 );
+
+     var dl2 = new THREE.DirectionalLight( 0xffffff, 0.3);
+     dl2.position.x = -100;
+     dl2.position.y = 250;
+     dl2.position.z = 110;
+     dl2.castShadow = true;
+     dl2.target = new THREE.Object3D();
+ dl2.target.position.set(150,0,0);
+     dl2.shadow.camera.left = -450.5;
+dl2.shadow.camera.right = 450.5;
+dl2.shadow.camera.top = 450.5;
+dl2.shadow.camera.bottom = -450.5;
+scene.add(dl2);
