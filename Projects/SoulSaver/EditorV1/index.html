@@ -24,5 +24,8 @@
 
     <br>
     <span>Export Output: </span><span id="export_o"></span>
+    <br><input id="level_i" type="text">
+    <button onclick="gameInstance.SendMessage('EditorMan', 'LoadLevel', document.getElementById('level_i').value);">Load Level</button>
+    <p>Note: Even though there are the save/export and load/import buttons ingame, they do not work in webgl, but please use the "Save Level" button to save your level, a on screen message will pop up, just click okay, then look in the top left at "Export Output" and highlight and copy that and paste it somewhere. (That is your map, it should look something like "3,-12,2,0,1,1&0,-11,-2,0,1,1&0,-7,0,0,1,1&0,-6,4,0,1,1&2,-4,1,0,1,1&2,-6.5,1,0,1,1", which you can copy and load your self if you want to test it.)</p>
   </body>
 </html>
