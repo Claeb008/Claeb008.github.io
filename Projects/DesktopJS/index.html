@@ -1,0 +1,25 @@
+<html>
+<style>
+  .noSel {
+          user-select: none;
+          -moz-user-select: none;
+          -khtml-user-select: none;
+          -webkit-user-select: none;
+          -o-user-select: none;
+  }
+  body
+{
+     margin: 0;
+}
+</style>
+<div id="program1Head" style="position: absolute; margin-left: 100; margin-top: 100;">
+<div id="p1MenuBar" class="noSel" style="background-color: green;">Program 1</div>
+<iframe id="program1" style="position: absolute;" width="800" height="500"></iframe>
+</div>
+
+<div id="overlay">Name</div>
+<input id="ii" type="text">
+<button onclick="document.getElementById('program1').src = document.getElementById('ii').value;">Load Website/Program</button>
+
+<script src="main.js"></script>
+</html>
