@@ -1,0 +1,9 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "EditorV2.data.unityweb",
+"asmCodeUrl": "EditorV2.asm.code.unityweb",
+"asmMemoryUrl": "EditorV2.asm.memory.unityweb",
+"asmFrameworkUrl": "EditorV2.asm.framework.unityweb",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
