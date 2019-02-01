@@ -8,10 +8,6 @@ var updated = false;
 var c = document.getElementById("c");
 var username = "";
 
-var mainPieces = []
-var mainDOMs = [];
-var mode = -1;
-
 
 if (typeof(Storage) !== "undefined")
 {
@@ -114,24 +110,7 @@ newGameRef.child('players').on('child_added',function(snap){
   var player_d = document.createElement('p');
   player_d.innerHTML = "P";
   player_d.style = "color: blue; position: absolute;";
-  //if(snap.child('loc').exists())
-  if(mainPieces.length > 0 || snap.child('loc').exists())
-  {
-    //document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
-    document.getElementById('area').appendChild(player_d);
-    player_d.style.zIndex = 200;
-    if(mainDOMs[snap.val().loc])
-    {
-      players[i].style.marginLeft = mainDOMs[snap.val().loc].style.marginLeft;
-      players[i].style.marginTop = mainDOMs[snap.val().loc].style.marginTop;
-      players[i].innerHTML = snap.key.substr(1,snap.key.length - 1);
-    }
-  }
-  else
-  {
-    document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
-  }
-
+  document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
   //var i = players.push(player_d);
 
   players[i] = player_d;
@@ -160,26 +139,10 @@ newGameRef.child('players').on('child_added',function(snap){
     //alert(snap.key);
     if(snap.child('x').exists() && players[i])
     {
-
+      players[i].style.marginLeft = snap.val().x;
+      players[i].style.marginTop = snap.val().y;
       players[i].style.color = snap.val().color;
-
-      //if(snap.child('loc').exists())
-      if(mainPieces.length > 0 && snap.child('loc').exists())
-      {
-        if(mainDOMs[snap.val().loc])
-        {
-          mode = 1;
-          players[i].style.marginLeft = mainDOMs[snap.val().loc].style.marginLeft;
-          players[i].style.marginTop = mainDOMs[snap.val().loc].style.marginTop;
-          players[i].innerHTML = snap.key.substr(1,snap.key.length - 1);
-        }
-      }
-      else
-      {
-        players[i].style.marginLeft = snap.val().x;
-        players[i].style.marginTop = snap.val().y;
-        players[i].innerHTML = snap.val().name + (snap.val().online ? "" : " (Offline)");
-      }
+      players[i].innerHTML = snap.val().name + (snap.val().online ? "" : " (Offline)");
     }
   });
 //});
@@ -191,7 +154,7 @@ newGameRef.child('players').on('child_removed',function(snap){
     console.log('hopefully off now');
   });
   var i = snap.key.substr(1,snap.key.length - 1);
-  document.getElementById(snap.child('loc').exists() ? 'area' : 'pBox').removeChild(players[i]);
+  document.getElementById('pBox').removeChild(players[i]);
   //players.splice(i,1);
   players[i] = null;
 });
@@ -266,12 +229,6 @@ function JoinGame()
     name: localStorage.username,
     online: true
   });
-  if(mainPieces.length > 0)
-  {
-    newGameRef.child('players/p' + gSnap.val().playerAmt).update({
-      loc: 0
-    });
-  }
   newGameRef.update({
     playerAmt: gSnap.val().playerAmt + 1
   });
@@ -296,28 +253,8 @@ var ay = 0;
 var area = document.getElementById('area');
 document.addEventListener('keydown',function(e){
   var key = e.key;
-  if(mode == 1)
-  {
-    if((key == "ArrowUp" || key == "ArrowDown" || key == "ArrowRight" || key == "ArrowLeft"))
-    {
-      e.preventDefault();
-      var curP = gSnap.child('players/p' + playerID);
-      var dir = (key == "ArrowUp" ? 1 : key == "ArrowDown" ? 0 : key == "ArrowRight" ? 3 : key == "ArrowLeft" ? 2 : -1);
-      if(dir != -1 && mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)] != -1)
-      {
-        //var loc = parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)]);
-        newGameRef.child('players/p' + playerID).update({
-          loc: parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)])
-        });
-      }
-    }
-  }
-  else
-  {
-    if(key == "ArrowLeft" || key == "ArrowRight") newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
-    if(key == "ArrowUp" || key == "ArrowDown") newGameRef.child('players/p' + playerID).update({y: gSnap.child('players/p' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
-  }
-
+  if(key == "ArrowLeft" || key == "ArrowRight") newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
+  if(key == "ArrowUp" || key == "ArrowDown") newGameRef.child('players/p' + playerID).update({y: gSnap.child('players/p' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
 
   if(key == "d" || key == "a")
   {
@@ -412,7 +349,7 @@ function LeaveGameOnline()
 }
 
 //LOAD BASIC DATA
-var usableObjsLocs,usableColors = [], uo;
+var usableObjsLocs,usableColors = [],mainPieces = [], uo;
 firebase.database().ref('objLocs2D/').once('value',function(snap){
   uo = snap;
   /*for(i2 = 0; i2 < snap.val().length; i2++){
@@ -569,23 +506,12 @@ function LoadMap()
 
       //mainPieces.push([parseInt(prop[0]),parseInt(prop[1]),parseInt(prop[2]),parseInt(prop[3]),parseInt(prop[4]),parseInt(prop[5]), /*Tiles*/ parseInt(prop[6]),parseInt(prop[7])]);
       mainPieces.push(prop);
-      mainDOMs.push(head);
       head.props = prop;
-
-
 
       //var str = pieces.push(go);
 
       }
 
-  }
-  if(playerID != -1)
-  {
-    mode = 1;
-    alert(playerID);
-    newGameRef.child('players/p' + playerID).update({
-      mode: (gSnap.child('players/p' + playerID).val().mode ? gSnap.child('players/p' + playerID).val().mode : 0) + 1
-    });
   }
 }
 
