@@ -436,7 +436,7 @@ firebase.database().ref('objLocs2D/').once('value',function(snap){
     //usableObjsLocs.push(snap.child(i).val());
   }}*/
  // usableObjsLocs.push();
- alert(uo);
+ //alert(uo);
 
 });
 firebase.database().ref('colors/').once('value',function(snap){
@@ -445,7 +445,7 @@ firebase.database().ref('colors/').once('value',function(snap){
     usableColors.push({color: snap.child(i).val().color, op: snap.child(i).val().op + 0.25, reflect: (snap.child(i).val().reflect)});//new colors(snap.child(i).val().color,snap.child(i).val().op));
 
   }
-  alert(usableColors[1].color);
+  //alert(usableColors[1].color);
   console.log("LOAD COLORS COMPLETE");
   //alert(usableColors[16].reflect);
   //alert(usableColors[0].reflect);
@@ -582,7 +582,7 @@ function LoadMap()
   if(playerID != -1)
   {
     mode = 1;
-    alert(playerID);
+    //alert(playerID);
     newGameRef.child('players/p' + playerID).update({
       mode: (gSnap.child('players/p' + playerID).val().mode ? gSnap.child('players/p' + playerID).val().mode : 0) + 1
     });
