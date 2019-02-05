@@ -308,12 +308,12 @@ document.addEventListener('keydown',function(e){
     if((key == "ArrowUp" || key == "ArrowDown" || key == "ArrowRight" || key == "ArrowLeft"))
     {
       e.preventDefault();
-      var curP = lSnap.child('players/' + playerID);
+      var curP = gSnap.child('players/p' + playerID);
       var dir = (key == "ArrowUp" ? 1 : key == "ArrowDown" ? 0 : key == "ArrowRight" ? 3 : key == "ArrowLeft" ? 2 : -1);
       if(dir != -1 && mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)] != -1)
       {
         //var loc = parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)]);
-        lGameRef.child('players/' + playerID).update({
+        newGameRef.child('players/p' + playerID).update({
           loc: parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)])
         });
       }
@@ -321,8 +321,8 @@ document.addEventListener('keydown',function(e){
   }
   else
   {
-    if(key == "ArrowLeft" || key == "ArrowRight") lGameRef.child('players/' + playerID).update({x: lSnap.child('players/' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
-    if(key == "ArrowUp" || key == "ArrowDown") lGameRef.child('players/' + playerID).update({y: lSnap.child('players/' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
+    if(key == "ArrowLeft" || key == "ArrowRight") newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
+    if(key == "ArrowUp" || key == "ArrowDown") newGameRef.child('players/p' + playerID).update({y: gSnap.child('players/p' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
   }
 
 
