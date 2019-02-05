@@ -189,11 +189,12 @@ lGameRef.child('players').on('child_added',function(snap){
 }
 
 newGameRef.child('players').on('child_removed',function(snap){
-  if(!snap.key.startsWith("p")) return;
-  newGameRef.child('players/p' + (snap.key.substr(1,snap.key.length - 1))).off('value',function(snap){
+  //if(!snap.key.startsWith("p")) return;
+  if(snap.parent.key != "players") return;
+  lGameRef.child('players/' + (parseInt(snap.key)).off('value',function(snap){
     console.log('hopefully off now');
   });
-  var i = snap.key.substr(1,snap.key.length - 1);
+  var i = parseInt(snap.key);
   document.getElementById(snap.child('loc').exists() ? 'area' : 'pBox').removeChild(players[i]);
   //players.splice(i,1);
   players[i] = null;
@@ -291,9 +292,13 @@ function LeaveGame()
     alert("You arent even in a game!");
     return;
   }
-  newGameRef.child("players/p" + playerID).set({});
+  if(!lSnap)
+  {
+    alert("You havent joined a game yet!");
+  }
+  lGameRef.child("players/" + playerID).set({});
   playerID = -1;
-  newGameRef.update({
+  lGameRef.update({
     //playerAmt: gSnap.val().playerAmt - 1
   });
 }
