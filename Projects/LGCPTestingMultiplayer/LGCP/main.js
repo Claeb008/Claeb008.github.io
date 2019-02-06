@@ -11,6 +11,7 @@ var username = "";
 var mainPieces = []
 var mainDOMs = [];
 var mode = -1;
+var gameStarted = false;
 
 
 if (typeof(Storage) !== "undefined")
@@ -88,6 +89,7 @@ newGameRef.on('value',function(snap){
 
 var lGameRef;
 function LStart(){
+gameStarted = true;
 lGameRef.child('players').on('child_added',function(snap){
   if(!lSnap) return;
   /*if(!lSnap.child('players/' + o).exists())
@@ -186,19 +188,25 @@ lGameRef.child('players').on('child_added',function(snap){
     }
   });
 });
-}
 
-newGameRef.child('players').on('child_removed',function(snap){
+lGameRef.child('players').on('child_removed',function(snap){
   //if(!snap.key.startsWith("p")) return;
-  if(snap.parent.key != "players") return;
-  lGameRef.child('players/' + (parseInt(snap.key)).off('value',function(snap){
+  //if(snap.parent.key != "players") return;
+  if(!snap.child('loc').exists()) return;
+  lGameRef.child('players/' + (parseInt(snap.key))).off('value',function(snap){
     console.log('hopefully off now');
   });
-  var i = parseInt(snap.key);
-  document.getElementById(snap.child('loc').exists() ? 'area' : 'pBox').removeChild(players[i]);
+  var i2 = parseInt(snap.key);
+  alert(i2);
+  //document.getElementById(snap.child('loc').exists() ? 'area' : 'pBox').removeChild(players[i]);
+  document.getElementById('area').removeChild(players[i2]);
   //players.splice(i,1);
-  players[i] = null;
+  players[i2] = null;
 });
+
+}
+
+
 
 
 
@@ -417,7 +425,8 @@ function LeaveGameOnline()
 {
   if(playerID != -1)
   {
-    newGameRef.child('players/p' + playerID).update({
+	if(!lGameRef) return;
+    lGameRef.child('players/' + playerID).update({
       online: false
     });
   }
@@ -643,7 +652,7 @@ function LoadGame()
   lGameRef.on('value',function(snap){
     lSnap = snap;
     //LLoadPlayers();
-    LStart();
+    if(!gameStarted) LStart();
   });
 
 }
