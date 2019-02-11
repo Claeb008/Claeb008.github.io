@@ -202,10 +202,10 @@ lGameRef.child('players').on('child_added',function(snap){
         }
       }*/
 
-      //if(!osnap.child('fighting').exists())
-      //{
+      if(!osnap.child('fighting').exists())
+      {
         CheckAround();
-      //}
+      }
 
     }
   });
@@ -346,13 +346,13 @@ function CheckAround()
 {
   for(i = 0; i < 4; i++)
   {
-    if(!mainPieces[v_loc] || lSnap.child('players/' + playerID + "/fighting").exists()) return;
+
     var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
     console.log(v + " i " + i);
     //lGameRef.once('value',function(snap){
       if(lSnap.child('props/' + v + '/Subitem').exists())
       {
-        if(lSnap.child('props/' + v + '/Subitem/health').val() > 0)
+        if(lSnap.child('props/' + v + 'Subitem/health').val() > 0)
         {
           alert("FIGHTING! - " + playerID);
           enemy = ('props/' + v + '/Subitem');
@@ -397,21 +397,6 @@ document.addEventListener('keydown',function(e){
         }*/
       }
     }
-
-    //Tests
-    if(key == "u")
-    {
-      var g =
-      {
-        som: 2,
-        one: 1,
-        fo: 4
-      };
-      console.log(g);
-      console.log(g.fo);
-      console.log(g[1]);
-    }
-
     //Rolling
     if(key == "r")
     {
@@ -428,14 +413,10 @@ document.addEventListener('keydown',function(e){
           alert("HIS HEALTH IS " + (parseInt(lSnap.child(enemy).val().health) - 1));
           if(parseInt(lSnap.child(enemy).val().health) - 1 <= 0)
           {
-
+            alert("DESTROYED");
             lGameRef.child('props/' + me.fighting.where).set({});
             lGameRef.child('players/' + playerID + "/fighting").set({});
-            CheckAround();
-            //alert("DESTROYED");
-            console.log("DESTREOYED");
-
-            return;
+            //CheckAround();
           }
           else
           {

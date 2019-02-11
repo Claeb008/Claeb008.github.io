@@ -187,26 +187,6 @@ lGameRef.child('players').on('child_added',function(snap){
         //players[i].style.marginTop = snap.val().y;
         //players[i].innerHTML = snap.val().name + (snap.val().online ? "" : " (Offline)");
       }
-
-      /*for(i = 0; i < 4; i++)
-      {
-
-        var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
-        console.log(v + " i " + i);
-        if(lSnap.child('props/' + v + '/Subitem').exists())
-        {
-          alert("FIGHTING! - " + playerID);
-          enemy = ('props/' + v + '/Subitem');
-          //alert("parent = " + enemy.parent.key);
-          lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
-        }
-      }*/
-
-      //if(!osnap.child('fighting').exists())
-      //{
-        CheckAround();
-      //}
-
     }
   });
 });
@@ -226,6 +206,8 @@ lGameRef.child('players').on('child_removed',function(snap){
   lGameRef.update({pAmt: lSnap.val().pAmt - 1});
   players[i2] = null;
 });
+
+//Update Subitems
 
 
 }
@@ -304,8 +286,7 @@ function JoinGame()
   lGameRef.child('players/' + lSnap.val().pAmt).update({
     color: "blue",
     name: localStorage.username,
-    online: true,
-    health: 4
+    online: true
   });
   if(mainPieces.length > 0)
   {
@@ -339,32 +320,6 @@ var mScale = 20;
 var ax = 0;
 var ay = 0;
 var area = document.getElementById('area');
-var enemy;
-var v_loc;
-
-function CheckAround()
-{
-  for(i = 0; i < 4; i++)
-  {
-    if(!mainPieces[v_loc] || lSnap.child('players/' + playerID + "/fighting").exists()) return;
-    var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
-    console.log(v + " i " + i);
-    //lGameRef.once('value',function(snap){
-      if(lSnap.child('props/' + v + '/Subitem').exists())
-      {
-        if(lSnap.child('props/' + v + '/Subitem/health').val() > 0)
-        {
-          alert("FIGHTING! - " + playerID);
-          enemy = ('props/' + v + '/Subitem');
-          //alert("parent = " + enemy.parent.key);
-          lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
-        }
-      }
-    //});
-
-  }
-}
-
 document.addEventListener('keydown',function(e){
   var key = e.key;
   if(mode == 1)
@@ -376,78 +331,10 @@ document.addEventListener('keydown',function(e){
       var dir = (key == "ArrowUp" ? 1 : key == "ArrowDown" ? 0 : key == "ArrowRight" ? 3 : key == "ArrowLeft" ? 2 : -1);
       if(dir != -1 && mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)] != -1)
       {
-        v_loc = parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)]);
         //var loc = parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)]);
         lGameRef.child('players/' + playerID).update({
-          loc: v_loc
+          loc: parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)])
         });
-//CheckAround();
-        /*for(i = 0; i < 4; i++)
-        {
-
-          var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
-          console.log(v + " i " + i);
-          if(lSnap.child('props/' + v + '/Subitem').exists())
-          {
-            alert("FIGHTING! - " + playerID);
-            enemy = ('props/' + v + '/Subitem');
-            //alert("parent = " + enemy.parent.key);
-            lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
-          }
-        }*/
-      }
-    }
-
-    //Tests
-    if(key == "u")
-    {
-      var g =
-      {
-        som: 2,
-        one: 1,
-        fo: 4
-      };
-      console.log(g);
-      console.log(g.fo);
-      console.log(g[1]);
-    }
-
-    //Rolling
-    if(key == "r")
-    {
-      var roll = Math.floor(Math.random() * 6);
-      var curMoves = (roll > 3 ? roll - 2 : roll); // 0 = move 1 space : 1 = shield : 2 = move 2 spaces : 3 = move 3 spaces
-      if(lSnap.child('players/' + playerID).val().fighting.state) //if you are fighting
-      {
-        var me = lSnap.child('players/' + playerID).val();
-        if(roll == 1 || roll == 3 || roll == 0) //DESTROY
-        {
-
-          alert("Start HIS HEALTH IS " + lSnap.child(enemy).val().health);
-
-          alert("HIS HEALTH IS " + (parseInt(lSnap.child(enemy).val().health) - 1));
-          if(parseInt(lSnap.child(enemy).val().health) - 1 <= 0)
-          {
-
-            lGameRef.child('props/' + me.fighting.where).set({});
-            lGameRef.child('players/' + playerID + "/fighting").set({});
-            CheckAround();
-            //alert("DESTROYED");
-            console.log("DESTREOYED");
-
-            return;
-          }
-          else
-          {
-
-          }
-          lGameRef.child('props/' + me.fighting.where + "/Subitem").update({health: lSnap.child(enemy).val().health - 1});
-        }
-        else // SKULL / FAILED
-        {
-          lGameRef.child('players/' + playerID).update({health: me.health - parseInt(lSnap.child(enemy).val().health)});
-          alert("SKULL / FAILED - YOU LOST " + lSnap.child(enemy).val().health + " HEALTH");
-        }
       }
     }
   }
@@ -631,7 +518,7 @@ function LoadMap(mode)
   console.log("FINISHED ADDING TO PIECESIDS ARRAY");
   console.log(pieceIds);
 
-var ar = [];
+
   for(i = 0; i < res.length; i++)
   {
     console.log(i);
@@ -658,13 +545,7 @@ var ar = [];
       head.style = "position: absolute;"; //transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);";
       gom.style = "transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);" + "position: absolute;";//width: " + o.gom.width + "px; height: " + o.gom.height + "px;"; //background-color: " + (colObj.color.startsWith("0") ? "#" + colObj.color.substr(2,6) : colObj.color) + ";";
       gom.innerHTML = o.src;//'<svg id="s" width="15px" height="30px"><rect id="r" width="15px" height="30px" style="fill:#ff0000;" /><circle cx="7.5" cy="15" r="4" stroke="rgb(0,0,0)" stroke-width="1" fill-opacity="0" stroke-opacity="0.3" /></svg>';
-      //Tests
-      ar.push(i);
-      gom.id = i;
-      gom.onclick = function(e)
-      {
-        console.log("PIECE at " + this.id);
-      }
+
       //if(prop[4] != "'" && prop[6] != "0") head.style += " transform: rotate(" + prop[6] + "deg);";
       //gom.style += " transform: rotate(45deg);";
       if(mid[0] == "5") console.log("begin");
@@ -775,37 +656,9 @@ function LoadGame()
   LoadMap(1);
   lGameRef = newGameRef.child(document.getElementById("game_i").value);
   lGameRef.on('value',function(snap){
-
-    /*if(lSnap && snap.child('players/' + playerID).exists())
-    {
-      if(lSnap.child('players/' + playerID).val().loc != snap.child('players/' + playerID).val().loc)
-      {
-        for(i = 0; i < 4; i++)
-        {
-
-          var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
-          console.log(v + " i " + i);
-          if(snap.child('props/' + v + '/Subitem').exists())
-          {
-            alert("FIGHTING! - " + playerID);
-            enemy = ('props/' + v + '/Subitem');
-            //alert("parent = " + enemy.parent.key);
-            lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
-          }
-        }
-      }
-    }*/
-
-
-
     lSnap = snap;
     //LLoadPlayers();
     if(!gameStarted) LStart();
-    else
-    {
-      //Subitem stuff
-
-    }
 
     if(playerID == 0)
     {
