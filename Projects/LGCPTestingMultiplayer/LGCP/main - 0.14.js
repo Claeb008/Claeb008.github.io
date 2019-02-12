@@ -601,12 +601,6 @@ var map,res,prop,pieceIds;
 //LOAD MAP
 function LoadMap(mode)
 {
-  if(!lSnap || !gSnap)
-  {
-    alert("The game is not fully loaded yet!");
-    return;
-  }
-
   if(mainPieces.length > 0)
   {
     alert("Your already in a LGCP game!");
@@ -747,16 +741,6 @@ var ar = [];
 
       //var str = pieces.push(go);
 
-      //SUBITEMS
-
-      if(prop[prop[4] == "'" ? 11 : 13]) // Loading a subitem
-      {
-        alert("spawned a subitem at " + i);
-        lGameRef.child("props/" + i + "/Subitem").update({
-          health: 2
-        });
-      }
-
       }
 
   }
@@ -788,7 +772,7 @@ function LoadGame()
     alert("That game does not exist!");
     return;
   }
-  //  LoadMap(1);
+  LoadMap(1);
   lGameRef = newGameRef.child(document.getElementById("game_i").value);
   lGameRef.on('value',function(snap){
 
@@ -831,7 +815,6 @@ function LoadGame()
       }
     }
   });
-    LoadMap(1);
 
 }
 function AdminUploadGame(level)
