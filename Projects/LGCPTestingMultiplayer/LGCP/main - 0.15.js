@@ -11,6 +11,7 @@ var username = "";
 var mainPieces = []
 var mainDOMs = [];
 var mode = -1;
+var gameStarted = false;
 
 
 if (typeof(Storage) !== "undefined")
@@ -34,7 +35,7 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
-var newGameRef = firebase.database().ref('Tests/Games');
+var newGameRef = firebase.database().ref('LGCP/Games');
 var gSnap;
 /*newGameRef.update({
   playerAmt: 0
@@ -43,6 +44,8 @@ newGameRef.on('value',function(snap){
   if(snap != gSnap) document.getElementById('loading_l').style = "visibility: hidden;";
   gSnap = snap;
   updated = true;
+
+
 });
 
 /*newGameRef.child('players').once('value',function(snap){
@@ -86,15 +89,22 @@ newGameRef.on('value',function(snap){
 
 
 
+var lGameRef;
+function LStart(){
+gameStarted = true;
+lGameRef.child('players').on('child_added',function(snap){
+  if(!lSnap) return;
+  /*if(!lSnap.child('players/' + o).exists())
+  {
+    return;
+  }*/
+  //var snap = lSnap.child('players/' + o);
 
-newGameRef.child('players').on('child_added',function(snap){
-  //newGameRef.once('value',function(snap2){
-  //alert(snap2.val().playerAmt);
   var i;
-  //if(!updated)
-  //{
-    //return;
-    i = snap.key.substr(1,snap.key.length - 1);
+
+    i = parseInt(snap.key);//snap.key.substr(1,snap.key.length - 1);
+
+      console.log("i: " + i);
 
 
   //}
@@ -114,6 +124,7 @@ newGameRef.child('players').on('child_added',function(snap){
   var player_d = document.createElement('p');
   player_d.innerHTML = "P";
   player_d.style = "color: blue; position: absolute;";
+  players[i] = player_d;
   //if(snap.child('loc').exists())
   if(mainPieces.length > 0 || snap.child('loc').exists())
   {
@@ -124,18 +135,16 @@ newGameRef.child('players').on('child_added',function(snap){
     {
       players[i].style.marginLeft = mainDOMs[snap.val().loc].style.marginLeft;
       players[i].style.marginTop = mainDOMs[snap.val().loc].style.marginTop;
-      players[i].innerHTML = snap.key.substr(1,snap.key.length - 1);
+      players[i].innerHTML = snap.key;//.substr(1,snap.key.length - 1);
     }
   }
   else
   {
-    document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
+    //document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
   }
 
-  //var i = players.push(player_d);
+  //players[i] = player_d;
 
-  players[i] = player_d;
-  //i--;
   console.log(i);
 
   if(user)
@@ -149,52 +158,79 @@ newGameRef.child('players').on('child_added',function(snap){
   if(localStorage.username == snap.val().name)
   {
     playerID = i;
-    newGameRef.child('players/p' + (i)).update({
+    lGameRef.child('players/' + (i)).update({
       online: true
     });
   }
   //alert(snap.val().name + " : " + localStorage.username);
 
-  newGameRef.child('players/p' + (i)).on('value',function(snap){
-    //alert(i);
-    //alert(snap.key);
-    if(snap.child('x').exists() && players[i])
+  lGameRef.child('players/' + (i)).on('value',function(osnap){
+    if(osnap.child('loc').exists() && players[i])
     {
 
-      players[i].style.color = snap.val().color;
+      players[i].style.color = osnap.val().color;
 
       //if(snap.child('loc').exists())
-      if(mainPieces.length > 0 && snap.child('loc').exists())
+      if(mainPieces.length > 0 && osnap.child('loc').exists())
       {
-        if(mainDOMs[snap.val().loc])
+        if(mainDOMs[osnap.val().loc])
         {
           mode = 1;
-          players[i].style.marginLeft = mainDOMs[snap.val().loc].style.marginLeft;
-          players[i].style.marginTop = mainDOMs[snap.val().loc].style.marginTop;
-          players[i].innerHTML = snap.key.substr(1,snap.key.length - 1);
+          players[i].style.marginLeft = mainDOMs[osnap.val().loc].style.marginLeft;
+          players[i].style.marginTop = mainDOMs[osnap.val().loc].style.marginTop;
+          players[i].innerHTML = osnap.key;//.substr(1,snap.key.length - 1);
         }
       }
       else
       {
-        players[i].style.marginLeft = snap.val().x;
-        players[i].style.marginTop = snap.val().y;
-        players[i].innerHTML = snap.val().name + (snap.val().online ? "" : " (Offline)");
+        //players[i].style.marginLeft = snap.val().x;
+        //players[i].style.marginTop = snap.val().y;
+        //players[i].innerHTML = snap.val().name + (snap.val().online ? "" : " (Offline)");
       }
+
+      /*for(i = 0; i < 4; i++)
+      {
+
+        var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
+        console.log(v + " i " + i);
+        if(lSnap.child('props/' + v + '/Subitem').exists())
+        {
+          alert("FIGHTING! - " + playerID);
+          enemy = ('props/' + v + '/Subitem');
+          //alert("parent = " + enemy.parent.key);
+          lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
+        }
+      }*/
+
+      //if(!osnap.child('fighting').exists())
+      //{
+        CheckAround();
+      //}
+
     }
   });
-//});
 });
 
-newGameRef.child('players').on('child_removed',function(snap){
-  if(!snap.key.startsWith("p")) return;
-  newGameRef.child('players/p' + (snap.key.substr(1,snap.key.length - 1))).off('value',function(snap){
+lGameRef.child('players').on('child_removed',function(snap){
+  //if(!snap.key.startsWith("p")) return;
+  //if(snap.parent.key != "players") return;
+  if(!snap.child('loc').exists()) return;
+  lGameRef.child('players/' + (parseInt(snap.key))).off('value',function(snap){
     console.log('hopefully off now');
   });
-  var i = snap.key.substr(1,snap.key.length - 1);
-  document.getElementById(snap.child('loc').exists() ? 'area' : 'pBox').removeChild(players[i]);
+  var i2 = parseInt(snap.key);
+  //alert(i2);
+  //document.getElementById(snap.child('loc').exists() ? 'area' : 'pBox').removeChild(players[i]);
+  document.getElementById('area').removeChild(players[i2]);
   //players.splice(i,1);
-  players[i] = null;
+  lGameRef.update({pAmt: lSnap.val().pAmt - 1});
+  players[i2] = null;
 });
+
+
+}
+
+
 
 
 
@@ -256,24 +292,29 @@ function JoinGame()
     return;
   }
 
+  if(!lSnap)
+  {
+    alert("You havent joined a game yet!");
+    return;
+  }
 
 
-  playerID = gSnap.val().playerAmt;
-  newGameRef.child('players/p' + gSnap.val().playerAmt).update({
+
+  playerID = lSnap.val().pAmt;
+  lGameRef.child('players/' + lSnap.val().pAmt).update({
     color: "blue",
-    x: 50,
-    y: 50,
     name: localStorage.username,
-    online: true
+    online: true,
+    health: 4
   });
   if(mainPieces.length > 0)
   {
-    newGameRef.child('players/p' + gSnap.val().playerAmt).update({
+    lGameRef.child('players/' + lSnap.val().pAmt).update({
       loc: 0
     });
   }
-  newGameRef.update({
-    playerAmt: gSnap.val().playerAmt + 1
+  lGameRef.update({
+    pAmt: lSnap.val().pAmt + 1
   });
 
 }
@@ -284,9 +325,13 @@ function LeaveGame()
     alert("You arent even in a game!");
     return;
   }
-  newGameRef.child("players/p" + playerID).set({});
+  if(!lSnap)
+  {
+    alert("You havent joined a game yet!");
+  }
+  lGameRef.child("players/" + playerID).set({});
   playerID = -1;
-  newGameRef.update({
+  lGameRef.update({
     //playerAmt: gSnap.val().playerAmt - 1
   });
 }
@@ -294,6 +339,32 @@ var mScale = 20;
 var ax = 0;
 var ay = 0;
 var area = document.getElementById('area');
+var enemy;
+var v_loc;
+
+function CheckAround()
+{
+  for(i = 0; i < 4; i++)
+  {
+    if(!mainPieces[v_loc] || lSnap.child('players/' + playerID + "/fighting").exists()) return;
+    var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
+    console.log(v + " i " + i);
+    //lGameRef.once('value',function(snap){
+      if(lSnap.child('props/' + v + '/Subitem').exists())
+      {
+        if(lSnap.child('props/' + v + '/Subitem/health').val() > 0)
+        {
+          alert("FIGHTING! - " + playerID);
+          enemy = ('props/' + v + '/Subitem');
+          //alert("parent = " + enemy.parent.key);
+          lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
+        }
+      }
+    //});
+
+  }
+}
+
 document.addEventListener('keydown',function(e){
   var key = e.key;
   if(mode == 1)
@@ -301,29 +372,89 @@ document.addEventListener('keydown',function(e){
     if((key == "ArrowUp" || key == "ArrowDown" || key == "ArrowRight" || key == "ArrowLeft"))
     {
       e.preventDefault();
-      var curP = gSnap.child('players/p' + playerID);
+      var curP = lSnap.child('players/' + playerID);
       var dir = (key == "ArrowUp" ? 1 : key == "ArrowDown" ? 0 : key == "ArrowRight" ? 3 : key == "ArrowLeft" ? 2 : -1);
       if(dir != -1 && mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)] != -1)
       {
+        v_loc = parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)]);
         //var loc = parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)]);
-        newGameRef.child('players/p' + playerID).update({
-          loc: parseInt(mainPieces[curP.val().loc][dir + parseInt(mainPieces[curP.val().loc][4] == "'" ? 6 : 8)])
+        lGameRef.child('players/' + playerID).update({
+          loc: v_loc
         });
+//CheckAround();
+        /*for(i = 0; i < 4; i++)
+        {
+
+          var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
+          console.log(v + " i " + i);
+          if(lSnap.child('props/' + v + '/Subitem').exists())
+          {
+            alert("FIGHTING! - " + playerID);
+            enemy = ('props/' + v + '/Subitem');
+            //alert("parent = " + enemy.parent.key);
+            lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
+          }
+        }*/
+      }
+    }
+
+    //Tests
+    if(key == "u")
+    {
+      var g =
+      {
+        som: 2,
+        one: 1,
+        fo: 4
+      };
+      console.log(g);
+      console.log(g.fo);
+      console.log(g[1]);
+    }
+
+    //Rolling
+    if(key == "r")
+    {
+      var roll = Math.floor(Math.random() * 6);
+      var curMoves = (roll > 3 ? roll - 2 : roll); // 0 = move 1 space : 1 = shield : 2 = move 2 spaces : 3 = move 3 spaces
+      if(lSnap.child('players/' + playerID).val().fighting.state) //if you are fighting
+      {
+        var me = lSnap.child('players/' + playerID).val();
+        if(roll == 1 || roll == 3 || roll == 0) //DESTROY
+        {
+
+          alert("Start HIS HEALTH IS " + lSnap.child(enemy).val().health);
+
+          alert("HIS HEALTH IS " + (parseInt(lSnap.child(enemy).val().health) - 1));
+          if(parseInt(lSnap.child(enemy).val().health) - 1 <= 0)
+          {
+
+            lGameRef.child('props/' + me.fighting.where).set({});
+            lGameRef.child('players/' + playerID + "/fighting").set({});
+            CheckAround();
+            //alert("DESTROYED");
+            console.log("DESTREOYED");
+
+            return;
+          }
+          else
+          {
+
+          }
+          lGameRef.child('props/' + me.fighting.where + "/Subitem").update({health: lSnap.child(enemy).val().health - 1});
+        }
+        else // SKULL / FAILED
+        {
+          lGameRef.child('players/' + playerID).update({health: me.health - parseInt(lSnap.child(enemy).val().health)});
+          alert("SKULL / FAILED - YOU LOST " + lSnap.child(enemy).val().health + " HEALTH");
+        }
       }
     }
   }
   else
   {
-    if(key == "ArrowLeft" || key == "ArrowRight")
-    {
-      e.preventDefault();
-      newGameRef.child('players/p' + playerID).update({x: gSnap.child('players/p' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
-    }
-    if(key == "ArrowUp" || key == "ArrowDown")
-    {
-      e.preventDefault();
-      newGameRef.child('players/p' + playerID).update({y: gSnap.child('players/p' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
-    }
+    if(key == "ArrowLeft" || key == "ArrowRight") lGameRef.child('players/' + playerID).update({x: lSnap.child('players/' + playerID).val().x + (key == "ArrowRight" ? 10 : -10)});
+    if(key == "ArrowUp" || key == "ArrowDown") lGameRef.child('players/' + playerID).update({y: lSnap.child('players/' + playerID).val().y + (key == "ArrowDown" ? 10 : -10)});
   }
 
 
@@ -363,9 +494,9 @@ function Update()
 
 
 
-  if(playerID != -1 && gSnap && gSnap.child('players/p' + playerID).val().color != c.value)
+  if(playerID != -1 && lSnap && lSnap.child('players/' + playerID).val().color != c.value)
   {
-    newGameRef.child('players/p' + playerID).update({
+    lGameRef.child('players/' + playerID).update({
       color: c.value,
     });
   }
@@ -378,14 +509,14 @@ setInterval(Update,20);
 
 function SaveUsername()
 {
-  if(gSnap)
+  if(lSnap)
   {
-    for(i = 0; i < gSnap.val().playerAmt; i++)
+    for(i = 0; i < lSnap.val().pAmt; i++)
     {
       //alert(i);
-      if(gSnap.child('players/p' + i).exists() && i != playerID)
+      if(lSnap.child('players/' + i).exists() && i != playerID)
       {
-        if(gSnap.child('players/p' + i).val().name == document.getElementById('name_i').value)
+        if(lSnap.child('players/' + i).val().name == document.getElementById('name_i').value)
         {
           document.getElementById('name_i').value = localStorage.username;
           alert("That Username Is Already Taken!");
@@ -399,7 +530,7 @@ function SaveUsername()
   //if(localStorage.username != document.getElementById('name_i').value)
   {
     localStorage.username = document.getElementById('name_i').value;
-    if(playerID != -1) newGameRef.child('players/p' + playerID).update({
+    if(playerID != -1) lGameRef.child('players/' + playerID).update({
       name: localStorage.username
     });
     localStorage.color = document.getElementById('c').value;
@@ -413,14 +544,15 @@ function LeaveGameOnline()
 {
   if(playerID != -1)
   {
-    newGameRef.child('players/p' + playerID).update({
+	if(!lGameRef) return;
+    lGameRef.child('players/' + playerID).update({
       online: false
     });
   }
 }
 
 //LOAD BASIC DATA
-var usableObjsLocs,usableColors = [], uo;
+var usableObjsLocs,usableColors = [], uo, res = [];
 firebase.database().ref('objLocs2D/').once('value',function(snap){
   uo = snap;
   /*for(i2 = 0; i2 < snap.val().length; i2++){
@@ -467,10 +599,35 @@ function colors(color,op)
 }
 var map,res,prop,pieceIds;
 //LOAD MAP
-function LoadMap()
+function LoadMap(mode)
 {
+  if(!lSnap || !gSnap)
+  {
+    alert("The game is not fully loaded yet!");
+    return;
+  }
+
+  if(mainPieces.length > 0)
+  {
+    alert("Your already in a LGCP game!");
+    return;
+  }
   map = document.getElementById("map_loc").value;
-  res = map.split("&");
+
+
+  var gr = document.getElementById("game_i").value;
+
+  if(mode == 1)
+  {
+    for(i = 0; i < gSnap.child(gr).val().amt; i++)
+    {
+      res.push(gSnap.child(gr + "/pieces/" + i).val());
+    }
+  }
+  else
+  {
+    res = map.split("&");
+  }
 
   for(i = 0; i < res.length; i++)
   {
@@ -480,7 +637,7 @@ function LoadMap()
   console.log("FINISHED ADDING TO PIECESIDS ARRAY");
   console.log(pieceIds);
 
-
+var ar = [];
   for(i = 0; i < res.length; i++)
   {
     console.log(i);
@@ -507,7 +664,13 @@ function LoadMap()
       head.style = "position: absolute;"; //transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);";
       gom.style = "transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);" + "position: absolute;";//width: " + o.gom.width + "px; height: " + o.gom.height + "px;"; //background-color: " + (colObj.color.startsWith("0") ? "#" + colObj.color.substr(2,6) : colObj.color) + ";";
       gom.innerHTML = o.src;//'<svg id="s" width="15px" height="30px"><rect id="r" width="15px" height="30px" style="fill:#ff0000;" /><circle cx="7.5" cy="15" r="4" stroke="rgb(0,0,0)" stroke-width="1" fill-opacity="0" stroke-opacity="0.3" /></svg>';
-
+      //Tests
+      ar.push(i);
+      gom.id = i;
+      gom.onclick = function(e)
+      {
+        console.log("PIECE at " + this.id);
+      }
       //if(prop[4] != "'" && prop[6] != "0") head.style += " transform: rotate(" + prop[6] + "deg);";
       //gom.style += " transform: rotate(45deg);";
       if(mid[0] == "5") console.log("begin");
@@ -584,16 +747,210 @@ function LoadMap()
 
       //var str = pieces.push(go);
 
+      //SUBITEMS
+
+      if(prop[prop[4] == "'" ? 11 : 13]) // Loading a subitem
+      {
+        alert("spawned a subitem at " + i);
+        lGameRef.child("props/" + i + "/Subitem").update({
+          health: 2
+        });
+      }
+
       }
 
   }
-  if(playerID != -1)
+  /*if(playerID != -1)
   {
     mode = 1;
     //alert(playerID);
     newGameRef.child('players/p' + playerID).update({
       mode: (gSnap.child('players/p' + playerID).val().mode ? gSnap.child('players/p' + playerID).val().mode : 0) + 1
     });
+  }
+
+  for(p = 0; p < lSnap.val().pAmt; p++)
+  {
+    if(lSnap.child('players/' + p).exists())
+    {
+      lGameRef.child('players/' + p).update({
+        x: lSnap.child('players/' + p).val().x + 1
+      });
+    }
+  }*/
+}
+//var lGameRef;
+var lSnap;
+function LoadGame()
+{
+  if(!gSnap.child(document.getElementById("game_i").value).exists())
+  {
+    alert("That game does not exist!");
+    return;
+  }
+  //  LoadMap(1);
+  lGameRef = newGameRef.child(document.getElementById("game_i").value);
+  lGameRef.on('value',function(snap){
+
+    /*if(lSnap && snap.child('players/' + playerID).exists())
+    {
+      if(lSnap.child('players/' + playerID).val().loc != snap.child('players/' + playerID).val().loc)
+      {
+        for(i = 0; i < 4; i++)
+        {
+
+          var v = mainPieces[v_loc][i + parseInt(mainPieces[v_loc][4] == "'" ? 6 : 8)];
+          console.log(v + " i " + i);
+          if(snap.child('props/' + v + '/Subitem').exists())
+          {
+            alert("FIGHTING! - " + playerID);
+            enemy = ('props/' + v + '/Subitem');
+            //alert("parent = " + enemy.parent.key);
+            lGameRef.child('players/' + playerID).update({fighting: {state: true, where: v}});
+          }
+        }
+      }
+    }*/
+
+
+
+    lSnap = snap;
+    //LLoadPlayers();
+    if(!gameStarted) LStart();
+    else
+    {
+      //Subitem stuff
+
+    }
+
+    if(playerID == 0)
+    {
+      if(lSnap.child('requests').exists())
+      {
+
+      }
+    }
+  });
+    LoadMap(1);
+
+}
+function AdminUploadGame(level)
+{
+  if(document.getElementById("game_i").value.length <= 0) return false;
+
+  map = level;
+  res = map.split("&");
+  var updates = {};
+
+
+  for(i = 0; i < res.length; i++)
+  {
+    updates[i] = res[i];
+  }
+  //updates['amt'] = res.length;
+  //updates['pAmt'] = 0;
+  newGameRef.child(document.getElementById("game_i").value).set({amt: res.length, pAmt: 0});
+  newGameRef.child(document.getElementById("game_i").value + '/pieces').set(updates);
+}
+
+function LLoadPlayers()
+{
+  for(o = 0; o < lSnap.val().pAmt; o++)
+  {
+    if(!lSnap.child('players/' + o).exists())
+    {
+      return;
+    }
+    var snap = lSnap.child('players/' + o);
+    console.log("i: " + o);
+    var i;
+
+      i = parseInt(snap.key);//snap.key.substr(1,snap.key.length - 1);
+
+
+    //}
+    //else
+    //{
+
+    //}
+    //else if(!snap.child('x').exists()) return;
+    //alert(snap.key);
+
+    //i = gSnap.val().playerAmt;
+    if(players[i])
+    {
+      //alert("Wait");
+      return;
+    };
+    var player_d = document.createElement('p');
+    player_d.innerHTML = "P";
+    player_d.style = "color: blue; position: absolute;";
+    players[i] = player_d;
+    //if(snap.child('loc').exists())
+    if(mainPieces.length > 0 || snap.child('loc').exists())
+    {
+      //document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
+      document.getElementById('area').appendChild(player_d);
+      player_d.style.zIndex = 200;
+      if(mainDOMs[snap.val().loc])
+      {
+        players[i].style.marginLeft = mainDOMs[snap.val().loc].style.marginLeft;
+        players[i].style.marginTop = mainDOMs[snap.val().loc].style.marginTop;
+        players[i].innerHTML = snap.key;//.substr(1,snap.key.length - 1);
+      }
+    }
+    else
+    {
+      //document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
+    }
+
+    //players[i] = player_d;
+
+    console.log(i);
+
+    if(user)
+    {
+      if(snap.user == user.uid) playerID = i;
+    }
+    else if(username != "")
+    {
+      if(username == snap.val().name) playerID = i;
+    }
+    if(localStorage.username == snap.val().name)
+    {
+      playerID = i;
+      lGameRef.child('players/' + (i)).update({
+        online: true
+      });
+    }
+    //alert(snap.val().name + " : " + localStorage.username);
+
+    lGameRef.child('players/' + (i)).on('value',function(osnap){
+      if(osnap.child('loc').exists() && players[i])
+      {
+
+        players[i].style.color = osnap.val().color;
+
+        //if(snap.child('loc').exists())
+        if(mainPieces.length > 0 && osnap.child('loc').exists())
+        {
+          if(mainDOMs[osnap.val().loc])
+          {
+            mode = 1;
+            players[i].style.marginLeft = mainDOMs[osnap.val().loc].style.marginLeft;
+            players[i].style.marginTop = mainDOMs[osnap.val().loc].style.marginTop;
+            players[i].innerHTML = osnap.key;//.substr(1,snap.key.length - 1);
+          }
+        }
+        else
+        {
+          //players[i].style.marginLeft = snap.val().x;
+          //players[i].style.marginTop = snap.val().y;
+          //players[i].innerHTML = snap.val().name + (snap.val().online ? "" : " (Offline)");
+        }
+      }
+    });
+  //});
   }
 }
 
