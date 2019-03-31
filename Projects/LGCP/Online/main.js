@@ -646,7 +646,7 @@ lGameRef.child('players').on('child_added',function(snap){
   {
     //document.getElementById('pBox').insertBefore(player_d,players[i - 1]);
     document.getElementById('area').appendChild(player_d);
-    player_d.style.zIndex = 200;
+    player_d.style.zIndex = 700;
     var ob = document.getElementById(snap.val().loc);
     if(ob)
     {
@@ -1356,7 +1356,6 @@ var res2;
   {
   	//mp.push({na: true});
     //mainDOMs.push({na: true});
-    console.log(prop[0]);
   	return;
   }
 
@@ -1377,9 +1376,6 @@ var res2;
   ar.push(i);
   gom.id = i;
 
-  gom.onclick = function(e){
-    console.log("PIECE at " + this.id);
-  };
   gom.childNodes[0].childNodes[0].onclick = function(e){
     if(!isShift)
     {
@@ -1442,7 +1438,7 @@ var res2;
 
   //head.style.marginLeft = parseFloat(prop[1]) * 1.5 + 500 + (o.off ? o.off.left : 0) + (prop[4] != "'" ? -2 : 0) + "px";
   //head.style.marginTop = parseFloat(prop[2]) * 1.5 + 250 + (o.off ? o.off.top : 0) + (prop[4] != "'" ? -2 : 0) +  "px";
-  head.style.zIndex = parseFloat(prop[3]);
+  head.style.zIndex = parseFloat(prop[3]) + 500;
 
   if(prop[4] != "'")
   {
@@ -1512,7 +1508,7 @@ var res2;
 
 
       //Set the Z axis
-      me.parentNode.style.zIndex = parseFloat(snap.val().props[3]);
+      me.parentNode.style.zIndex = parseFloat(snap.val().props[3]) + 500;
 
       //= "transform: rotate(" + (prop[4] != "'" ? parseFloat(prop[6]) : 0) + "deg);" + "position: absolute;";
 
