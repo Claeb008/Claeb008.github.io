@@ -820,7 +820,8 @@ function LoadMap(mode)
     alert("Your already in a LGCP game!");
     return;
   }
-  map = document.getElementById("map_loc").value;
+  //map = document.getElementById("map_loc").value;
+  map = "";
 
 
   var gr = document.getElementById("game_i").value;
@@ -1534,7 +1535,7 @@ console.log(id);
 
   //var src2 = (id == 0 ? "0.0,0,0,0,',5,-1,-1,-1,-1," + lSnap.val().pieces.length : id == 0.1 ? "0.1,0,0,0,',5" : "5.0,0,0,-4,',5");
   var src = (id == 0 ? ["0.0",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length] : id == 0.1 ? ["0.1",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length] : id == "1.0" ? "1.0,0,0,-4,',5".split(",") : "5.0,0,0,-4,',5".split(","));
-  if(selObjs[0] && !atr.spaced) src[3] = parseInt(selObjs[0].parentNode.style.zIndex) + 4;
+  if(selObjs[0] && !atr.spaced) src[3] = (parseInt(selObjs[0].parentNode.style.zIndex) - 500) + 4;
 
   if(atr.spaced && true)
   {
@@ -1669,6 +1670,26 @@ function EditorActions(id,atr)
 
     break;
   }
+}
+
+function CreateGame()
+{
+  var vas = document.getElementById("gameCreate_i").value; //database.ref("Multi/" + in).update({});
+  if(vas.length == 0) return;
+
+  database.ref("Multi/" + vas).endAt(vas).once('value',function(snap){
+    var amt = 0;
+    snap.forEach(function(c){
+      alert("A game already exists with that name!");
+      amt++;
+      //return;
+    });
+    if(amt == 0) CreateGameP2(vas);
+  });
+}
+function CreateGameP2(va)
+{
+  alert("CREATING GAME AT: " + va);
 }
 
 /////////////////////
