@@ -1356,6 +1356,7 @@ var res2;
   {
   	//mp.push({na: true});
     //mainDOMs.push({na: true});
+    console.log(prop[0]);
   	return;
   }
 
@@ -1376,6 +1377,9 @@ var res2;
   ar.push(i);
   gom.id = i;
 
+  gom.onclick = function(e){
+    console.log("PIECE at " + this.id);
+  };
   gom.childNodes[0].childNodes[0].onclick = function(e){
     if(!isShift)
     {
