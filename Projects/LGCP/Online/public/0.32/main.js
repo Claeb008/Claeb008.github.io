@@ -592,7 +592,20 @@ function init()
     document.getElementById("Scene").appendChild(tbox);
   }*/
 
-  document.getElementById("area").style.zoom = 1;
+  /*document.getElementById("area").style.zoom = 1;
+
+  database.ref("Multi").once('value',function(snap){
+    snap.forEach(function(c){
+      if(c.child("players/" + user.uid).exists())
+      {
+        document.getElementById("game_i").value = c.key;
+        LoadGame();
+        return;
+      }
+    });
+
+    document.getElementById("menuControls").style.visibility = "visible";
+  });*/
 }
 
 
@@ -1006,7 +1019,6 @@ lGameRef.child("pieces").on('child_removed',function(snap){
 var lSnap;
 function LoadGame()
 {
-
   if(!rSnap.child(document.getElementById("game_i").value).exists())
   {
     alert("That game does not exist!");
