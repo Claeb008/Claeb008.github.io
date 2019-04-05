@@ -1,0 +1,79 @@
+<html>
+<head>
+<style>
+  button {
+    width: 100%;
+    height: 100%;
+    background-color: darkred;
+    font-family: Impact, Charcoal, sans-serif;
+    font-size: 30px;
+    transition: background-color 0.2s;
+    border: 0;
+    outline: none;
+  }
+
+  body {
+    margin: 0;
+    height: 100%;
+  }
+</style>
+</head>
+  <body>
+  <button id="b" onclick="open('https://Claeb008.github.io/TL_v1.0.0/')" onmouseover="over = true" onmouseleave="Reset()"><span id="s">( ͡°╭͜ʖ╮͡° )</span></button>
+
+
+  <script>
+  var over = false;
+  var buto = document.getElementById("b");
+  //button.style.height = "100%";
+  var i = 0;
+  var i2 = 0;
+
+  function Reset()
+  {
+    over = false;
+    buto.style.backgroundColor = 'darkred';
+    document.getElementById('s').innerHTML = '( ͡°╭͜ʖ╮͡° )';
+  }
+
+  var colors = [
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "lightblue",
+    "purple"
+  ];
+  var texts = [
+    "Press",
+    "for",
+    "free",
+    "COOKIES"
+
+  ];
+  function Update()
+  {
+    if(over)
+    {
+      buto.style.backgroundColor = colors[i];
+      i++;
+      if(i >= colors.length) i = 0;
+    }
+  }
+  setInterval(Update,50);
+
+  function Update2()
+  {
+    if(over)
+    {
+      document.getElementById("s").innerHTML = texts[i2];
+      i2++;
+      if(i2 >= texts.length) i2 = 0;
+    }
+  }
+  setInterval(Update2,900);
+
+  </script>
+
+  </body>
+</html>
