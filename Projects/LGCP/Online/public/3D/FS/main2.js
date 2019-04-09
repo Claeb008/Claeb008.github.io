@@ -157,10 +157,9 @@ m.onmouseleave = function(e){
                 return;
               }
             }
-            else// if(isShift || (!isShift && INTERSECTED))
+            else if(isShift || (!isShift && INTERSECTED))
             //if(isShift)
             {
-              if(!INTERSECTED) return;
               //if(INTERSECTED) alert("desel");
               selObjs.forEach(function(c){
                 c.material.wireframe = false;
@@ -176,7 +175,7 @@ m.onmouseleave = function(e){
 
 
         	}
-        	else if(!overMenu)
+        	else if(!overMenu && !isShift)
         	{
         		selObjs[0] = INTERSECTED;
         		if(selObjs[0]) selObjs[0].material.wireframe = true;//EditMaterial(selObj, [{id: 0, way: true}], 0x0000ff);
@@ -550,21 +549,6 @@ document.addEventListener('keydown',function(e){
       }
     });
   }
-
-//Deselect
-if(key == "F")
-{
-  selObjs.forEach(function(c){
-    c.material.wireframe = false;
-  });
-    selObjs = [];
-    /*if(intersects.length > 0)
-    {
-      selObjs[0] = INTERSECTED;
-      selObjs[0].material.wireframe = true;
-    //EditMaterial(selObj, [{id: 0, way: true}], 0x0000ff);
-  }*/
-}
 
   //Delete piece
 if(key == "X")
