@@ -77,6 +77,15 @@ var uo;
 
     firebase.database().ref('objLocs/').once('value',function(snap){
 	 		uo = snap;
+	    var dd = document.getElementById("spawn_dd");
+	    snap.forEach(function(c1){
+	    	c1.forEach(function(c2){
+			var cd = document.createElement("span");
+	    		cd.onclick = `AddPiece($(c1.key + "." + c2.key))`;
+			cd.innerHTML = c2.key;
+			dd.appendChild(cd);
+		});
+	    });
 
       init();
 		});
