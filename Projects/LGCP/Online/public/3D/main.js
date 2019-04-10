@@ -990,8 +990,8 @@ console.log(id);
 
 
   //var src2 = (id == 0 ? "0.0,0,0,0,',5,-1,-1,-1,-1," + lSnap.val().pieces.length : id == 0.1 ? "0.1,0,0,0,',5" : "5.0,0,0,-4,',5");
-  
-	var src = (id == 0 ? ["0.0",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length] : id == 0.1 ? ["0.1",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length] : id == "1.0" ? "1.0,0,0,-4,',5".split(",") : "5.0,0,0,-4,',5".split(","));
+  var src = ["0.0",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length]
+	//var src = (id == 0 ? ["0.0",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length] : id == 0.1 ? ["0.1",0,0,0,"'",5,-1,-1,-1,-1,lSnap.val().pieces.length] : id == "1.0" ? "1.0,0,0,-4,',5".split(",") : "5.0,0,0,-4,',5".split(","));
   if(selObjs[0] && !atr.spaced) src[3] = (parseInt(selObjs[0].position.y)) + 4;
 src[0] = id;
 
