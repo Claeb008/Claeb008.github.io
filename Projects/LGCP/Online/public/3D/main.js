@@ -77,7 +77,7 @@ var uo;
 
     firebase.database().ref('objLocs/').once('value',function(snap){
 	 		uo = snap;
-	    var dd = document.getElementById("spawn_dd");
+	    var dd = document.getElementById("objs_dd");
 	    snap.forEach(function(c1){
 	    	c1.forEach(function(c2){
 			var cd = document.createElement("span");
