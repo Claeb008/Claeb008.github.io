@@ -35,10 +35,6 @@ var selObjs = [];
 
 //NETWORKING
 
-var ab = document.createElement("a");
-ab.href = "/0.33";
-ab.click();
-
 var user;
 var userRef;
 
@@ -111,11 +107,34 @@ function LoadAuth()
 
 
   //Update Root Snap (Used to be gSnap in past versions)
-  firebase.database().ref("Multi").on('value',function(snap){
+  firebase.database().ref("Multi").once('value',function(snap){
     //alert("bhello");
   	//if(snap != rSnap) document.getElementById('loading_l').style = "visibility: hidden;";
   	rSnap = snap;
     console.log("rrrrrrrrrrrrrrrrrrrrrrr");
+
+
+    var times = 0;
+    snap.forEach(function(c){
+      if(c.child("players/" + user.uid).exists())
+      {
+        document.getElementById("game_i").value = c.key;
+        times++;
+        //LoadGame();
+        //return;
+      }
+    });
+
+    if(times == 0)
+    {
+      document.getElementById("menuControls").style.visibility = "visible";
+      console.log("You must not already be in a game");
+    }
+    else
+    {
+      LoadGame();
+      console.log("Your in a game");
+    }
   	//updated = true;
 
 
@@ -126,7 +145,7 @@ function LoadAuth()
   //alert("jhello");
   	if(!gSnap)
     {
-    	document.getElementById('loading_l').style = "visibility: hidden;";
+    	document.getElementById('loading_l').style.visibility = "hidden";
       gSnap = snap;
       updated = true;
 
@@ -135,7 +154,7 @@ function LoadAuth()
     }
   	if(snap != gSnap)
   	{
-  		document.getElementById('loading_l').style = "visibility: hidden;";
+  		//document.getElementById('loading_l').style = "visibility: hidden;";
       gSnap = snap;
       updated = true;
 
@@ -193,7 +212,11 @@ document.addEventListener('keydown',function(e){
   //if(e.key == "g") console.log(player.props.width);
   var key = e.key;
   if(key == "Shift") isShift = true;
-  if(key == " ") isSpace = true;
+  if(key == " ")
+  {
+    isSpace = true;
+    if(selObjs[0]) e.preventDefault();
+  }
   //console.log(key + "r");
 
   //Editor
@@ -203,7 +226,7 @@ document.addEventListener('keydown',function(e){
   if(isSpace && selObjs.length == 1)
   {
   	var arrP = lSnap.child("pieces/" + selObjs[0].id).val();
-  	AddPiece(0,{x: arrP.x + (dir == 3 ? 30 : dir == 2 ? -30 : 0), y: arrP.y + (dir == 1 ? -30 : dir == 0 ? 30 : 0), color: 0, spaced: true, dir: dir});
+  	AddPiece(0,{x: arrP.props[1] + (dir == 3 ? 30 : dir == 2 ? -30 : 0), y: arrP.props[2] + (dir == 1 ? -30 : dir == 0 ? 30 : 0), color: 0, spaced: true, dir: dir});
   }
   else
   {
@@ -221,7 +244,7 @@ document.addEventListener('keydown',function(e){
         //par.style.marginLeft.replace("px","");
         //par.style.marginLeft = (parseFloat(par.style.marginLeft) + (dir == 3 ? 16 : -16)) + "px";
         lGameRef.child("pieces/" + r).update({
-        	x: (lSnap.child("pieces/" + r).val().x + (dir == 3 ? speed : -speed))
+        	x: (lSnap.child("pieces/" + r).val().props[1] + (dir == 3 ? speed : -speed))
         });
       }
       if(dir == 0 || dir == 1)
@@ -230,7 +253,7 @@ document.addEventListener('keydown',function(e){
         //par.style.marginTop.replace("px","");
         //par.style.marginTop = (parseFloat(par.style.marginTop) + (dir == 1 ? -16 : 16)) + "px";
        	lGameRef.child("pieces/" + r).update({
-        	y: (lSnap.child("pieces/" + r).val().y + (dir == 1 ? -speed : speed))
+        	y: (lSnap.child("pieces/" + r).val().props[2] + (dir == 1 ? -speed : speed))
         });
       }
       c.id = old;
@@ -248,6 +271,12 @@ document.addEventListener('keydown',function(e){
   {
      e.preventDefault();
      console.log("lSnap : " + lSnap.val().loc);
+     if(!lSnap.child("loc").exists())
+     {
+       lGameRef.child('players/' + user.uid).update({
+         here: true
+       });
+     }
      /*if(!lSnap.child('players/' + user.uid + "/fighting").exists())
      {
       var curP = lSnap.child('players/' + user.uid);
@@ -452,7 +481,11 @@ document.addEventListener('keyup',function(e){
   if(e.key == "ArrowUp") up = 0;
   if(e.key == "ArrowDown") up = 0;
   if(e.key == "Shift") isShift = false;
-  if(e.key == " ") isSpace = false;
+  if(e.key == " ") {
+    isSpace = false;
+    if(selObjs[0]) e.preventDefault();
+  }
+
 });
 
 
@@ -840,7 +873,6 @@ function LoadMap(mode)
   //map = document.getElementById("map_loc").value;
   map = "";
 
-
   var gr = document.getElementById("game_i").value;
 
   if(mode == 1)
@@ -1017,6 +1049,10 @@ lGameRef.child("pieces").on('child_removed',function(snap){
 				}
 	});
   LStart();
+
+  document.getElementById("menuControls").style.visibility = "hidden";
+  document.getElementById('menuControlsExit').style.visibility = "visible";
+  document.getElementById('loading_l').style.visibility = "hidden";
 }
 
 //Loading a Game / Joining a Game
@@ -1029,6 +1065,8 @@ function LoadGame()
     console.log(document.getElementById("game_i").value);
     return;
   }
+  document.getElementById('loading_l').style.visibility = "visible";
+  document.getElementById('loading_l').innerHTML = "Loading Map...";
   //  LoadMap(1);
   lGameRef = newGameRef.child(document.getElementById("game_i").value);
   lGameRef.on('value',function(snap){
@@ -1039,18 +1077,18 @@ function LoadGame()
     	if(!snap.child("players/" + user.uid + "/id").exists())
       {
       	lSnap = snap;
-
-        lGameRef.update({
-        	pAmt: snap.val().pAmt + 1
-        });
+        console.log("pAMT: " + snap.val().pAmt);
 
   			lGameRef.child('players/' + user.uid).update({
-  				here: true,
   			  name: user.displayName,
   			  id: snap.val().pAmt,
   			  loc: 0,
   			  health: 4
   			});
+
+        lGameRef.update({
+          pAmt: snap.val().pAmt + 1
+        });
 
         pRef = lGameRef.child('players/' + user.uid);
   			pRef.on('value',function(snap){
@@ -1059,6 +1097,28 @@ function LoadGame()
 
       }
       lSnap = snap;
+
+
+      //////////////////////////////
+
+      pRef = lGameRef.child('players/' + user.uid);
+      pRef.on('value',function(snap){
+        pSnap = snap;
+      });
+
+      pRef.update({update: true});
+
+
+
+      //LStart();
+        LoadMap(1);
+
+        CheckAround();
+
+        //////////////////////////////////////////////
+
+
+
     }
 
     lSnap = snap;
@@ -1076,20 +1136,6 @@ function LoadGame()
   });
 
 
-  pRef = lGameRef.child('players/' + user.uid);
-  pRef.on('value',function(snap){
-  	pSnap = snap;
-  });
-
-  pRef.update({update: true});
-
-
-
-	//LStart();
-
-    LoadMap(1);
-
-    CheckAround();
 
 
 }
@@ -1119,6 +1165,22 @@ function Actions(id,atr)
     	});
     	selObjs = [];
     break;
+  }
+}
+
+//Opening the website
+window.onload = function (e)
+{
+  if(lSnap)
+  {
+    var currentdate = new Date();
+    var datetime = {
+      date: currentdate.getDate(),
+      month: (currentdate.getMonth()+1),
+      year: currentdate.getFullYear(),
+      hour: currentdate.getHours()
+    };
+    lGameRef.child("players/" + user.uid).update({left: datetime});
   }
 }
 
@@ -1453,8 +1515,8 @@ var res2;
 
 
 
-  //head.style.marginLeft = parseFloat(prop[1]) * 1.5 + 500 + (o.off ? o.off.left : 0) + (prop[4] != "'" ? -2 : 0) + "px";
-  //head.style.marginTop = parseFloat(prop[2]) * 1.5 + 250 + (o.off ? o.off.top : 0) + (prop[4] != "'" ? -2 : 0) +  "px";
+  head.style.marginLeft = parseFloat(prop[1]) * 1.5 + 500 + (o.off ? o.off.left : 0) + (prop[4] != "'" ? -2 : 0) + "px";
+  head.style.marginTop = parseFloat(prop[2]) * 1.5 + 250 + (o.off ? o.off.top : 0) + (prop[4] != "'" ? -2 : 0) +  "px";
   head.style.zIndex = parseFloat(prop[3]) + 500;
 
   if(prop[4] != "'")
@@ -1484,7 +1546,7 @@ var res2;
   //FOR EDITOR //Add event listener to pieces so when their props change they'll be updated
   lGameRef.child("pieces/" + i).on('value',function(snap){
     var who = parseInt(snap.key);
-    if(!snap.child("x").exists()) return;
+    if(!snap.child("props").exists()) return;
     /*if(!mainDOMs[who])
     {
       //alert("SOMETHING WENT WRONG");
@@ -1492,8 +1554,8 @@ var res2;
     }*/
     var me = document.getElementById(who);
     var lo = lSnap.child("pieces/" + who);
-    document.getElementById(who).parentNode.style.marginLeft = (parseFloat(snap.val().x) + (lo.val().props[4] != "'" || lo.child("props/rot").exists() ? 0 : 0)) + "px";
-    document.getElementById(who).parentNode.style.marginTop = (parseFloat(snap.val().y) + (lo.val().props[4] != "'" || lo.child("props/rot").exists() ? 0 : 0)) + "px";
+    document.getElementById(who).parentNode.style.marginLeft = (GetPos(1,snap.val().props) + (lo.val().props[4] != "'" || lo.child("props/rot").exists() ? 0 : 0)) + "px";
+    document.getElementById(who).parentNode.style.marginTop = (GetPos(2,snap.val().props) + (lo.val().props[4] != "'" || lo.child("props/rot").exists() ? 0 : 0)) + "px";
     //Set Rotation
     if(snap.child("props/rot").exists())
     {
@@ -1706,6 +1768,81 @@ function CreateGame()
 function CreateGameP2(va)
 {
   alert("CREATING GAME AT: " + va);
+  var map = document.getElementById("map_i").value;
+  var gc = document.getElementById("gameCreate_i").value;
+  if(!map || map.length == 0) map = "0.0,0,0,0,',16,-1,-1,-1,-1,0";
+  var res = map.split("&");
+  var pieces = [];
+  for(var i = 0; i < res.length; i++)
+  {
+    var prop = res[i].split(",");
+    var mid = prop[0].split(".");
+    var o = uo.child(mid[0]).child(mid[1]).val();
+    pieces[i] = {};
+    var rot = {z:null};
+    if(prop[4] != "'")
+    {
+      rot = {z: parseFloat(prop[6])};
+      for(var i2 = 4; i2 < 6; i2++)
+      {
+        prop.splice(i2,1);
+      }
+      prop[4] = "'";
+
+      //if(prop.length >= 8)
+
+
+      //"5.0,0,0,-4,45,45,45,0"
+      //rot = {z: parseFloat(prop[6])};
+      //for(var i2 = 0; i2 < prop.length; i2++)
+      //{
+        //tprop[i2] = prop[i2 >= 4 ? i2 + 2 : i2];
+      //}
+      //prop = tprop;
+    }
+    if(rot.z) prop.rot = rot;
+    pieces[i].props = prop;
+    pieces[i].src = "";
+    pieces[i].color = prop[prop[4] != "'" ? 7 : 5];
+    pieces[i].x = 0;
+    pieces[i].y = 0;
+    //pieces[i].x = GetPos(1,prop,o); //parseFloat(prop[1]) * 1.5 + 500 + (o ? (o.off ? o.off.left : 0) : 0) + (prop[4] != "'" ? -2 : 0);
+    //pieces[i].y = GetPos(2,prop,o); //parseFloat(prop[2]) * 1.5 + 250 + (o ? (o.off ? o.off.top : 0) : 0) + (prop[4] != "'" ? -2 : 0);
+  }
+  console.log("FINISHED FOR LOOP FOR CREATION");
+  newGameRef.child(gc).set({pAmt: 0, amt: 0, pieces: pieces});
+  document.getElementById("game_i").value = gc;
+  //Waiting();
+  //LoadAuth();
+}
+//var waiting = false;
+
+function GetPos(num,prop)
+{
+  var mid = prop[0].split(".");
+  var o = uo.child(mid[0]).child(mid[1]).val();
+  //return parseFloat(num) * 1.5 + offset + (o ? (o.off ? o.off.left : 0) : 0);// + (rot && offset == 250 ? -7.5 : 0);
+  if(num == 1)
+  {
+    return parseFloat(prop[1]) * 1.5 + 500 + (o ? (o.off ? o.off.left : 0) : 0) + (prop[4] != "'" ? -2 : 0);
+  }
+  else if(num == 2)
+  {
+    return parseFloat(prop[2]) * 1.5 + 250 + (o ? (o.off ? o.off.top : 0) : 0) + (prop[4] != "'" ? -2 : 0);
+  }
+}
+
+function Waiting()
+{
+  LoadGame();
+}
+
+function LeaveGame()
+{
+  if(lSnap && pSnap && user.uid)
+  {
+    lGameRef.child("players/" + user.uid).set(null);
+  }
 }
 
 /////////////////////

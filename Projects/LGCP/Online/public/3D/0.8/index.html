@@ -1,46 +1,41 @@
+<!DOCTYPE html>
 <html>
-<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
+	<head>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script>
+  <script src="https://threejs.org/build/three.js"></script>
+  <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://claeb008.github.io/objs/OrbitControls.js"></script>
+  <link href="main.css" type="text/css" rel="stylesheet" />
+		<meta charset=utf-8>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 20; }
+			canvas { width: 50%; height: 50% }
+		</style>
+	</head>
+	<body>
 
-<link href="main.css" type="text/css" rel="stylesheet" />
-<body>
-<div id="Title">
-
-<div class="auth"><span id="p_Username">No User</span><br><img id="p_Photo" src="null" style="border-radius: 50%; margin-right: 10px;"></div>
-
-
-<div><span id="version">Version: 0.37<br>Date: 4/8/19 6:02 PM</span></div>
-
+  <div id="Title">
+  <div class="auth"><span id="p_Username">No User</span><br><img id="p_Photo" src="null" style="border-radius: 50%; margin-right: 10px;"></div>
+  <div><span id="version">Version: 0.5 (3D)<br>Date: 4/7/19 5:42 PM</span></div>
   <span id="game_title">LGCP</span><br><span id="game_author_dir">Created by: </span><span id="game_author">RECTAGON PRODUCTIONS</span>
+  </div>
+
+  <div class="menuClass" style="right: 0"><br><br><br><button onclick="LogIn()">Log In</button><button onclick="LogOut()">Log Out</button></div>
+  <span class="menuClass" id="loading_l" style="color: gray; margin-top: 60px;">Loading Game...</span>
 
 
-</div>
-<br>
-<div style="float: right"><button onclick="LogIn()">Log In</button><button onclick="LogOut()">Log Out</button></div>
-<span id="loading_l" style="color: gray">Loading Game...</span>
+  <!--<br><br>-->
+  <div class="menuClass" id="menuControls" style="visibility: hidden">
+    <button onclick="LoadGame()">Join Game</button><input id="game_i"><!--<input id="map_loc">-->
+    <!--<br>--><button onclick="CreateGame()">Create Game</button><input id="gameCreate_i"><input id="map_i">
+  </div>
+  <button class="menuClass" style="visibility: hidden" onclick="LeaveGame()" id="menuControlsExit">Leave Game</button>
 
 
-<br><br>
-<div id="menuControls" style="visibility: hidden">
-  <button onclick="LoadGame()">Join Game</button><input id="game_i"><!--<input id="map_loc">-->
-  <br><button onclick="CreateGame()">Create Game</button><input id="gameCreate_i"><input id="map_i">
-</div>
-<button style="visibility: hidden" onclick="LeaveGame()" id="menuControlsExit">Leave Game</button>
-
-<div id="pBox"></div>
-
-<div id="area"></div>
-
-
-
-
-
-
-
-
-
-<div id="menu">
+  <div id="menu">
   <a onclick="Actions(0)">
     Deselect <span>Shft + D</span>
   </a>
@@ -60,9 +55,6 @@
       </a>
         <div class="dropdown-content" id="path_dd" style="right: 0">
           <span onclick="ConnectSurroundingTiles()">Connect Surrounding Tiles</span>
-          <div>
-          <span class="inh">[Expert]<span style="display: inline;" onclick="TileOptions(0)"> Set TileLocID </span><input class="in" id="to_0"></span>
-          </div>
           <div>
           <span class="inh">[Expert]<span style="display: inline;" onclick="SetDir(0,this.value)"> Set Back </span><input class="in" id="i_0"></span>
           </div>
@@ -106,9 +98,9 @@
       </a>
         <div class="dropdown-content" id="objs_dd" style="right: 0">
           <!--<span>2x2 Tile W Stud</span>-->
-          <span onclick="AddPiece('0.1')">2x1 Tile W Stud</span>
+          <!--<span onclick="AddPiece('0.1')">2x1 Tile W Stud</span>
           <span onclick="AddPiece('1.0')">1x1 Plate</span>
-          <span onclick="AddPiece()">4x4 Plate</span>
+          <span onclick="AddPiece('5.0')">4x4 Plate</span>-->
         </div>
     </div>
     <div class="dropdown">
@@ -121,6 +113,5 @@
     </div>
 </div>
 <script src="main.js"></script>
-<script src="../globalupdater.js" id="gu"></script>
-</body>
+	</body>
 </html>

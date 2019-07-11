@@ -10,7 +10,7 @@
 <div class="auth"><span id="p_Username">No User</span><br><img id="p_Photo" src="null" style="border-radius: 50%; margin-right: 10px;"></div>
 
 
-<div><span id="version">Version: 0.37<br>Date: 4/8/19 6:02 PM</span></div>
+<div><span id="version">Version: 0.41<br>Date: 4/13/19 2:45 PM</span></div>
 
   <span id="game_title">LGCP</span><br><span id="game_author_dir">Created by: </span><span id="game_author">RECTAGON PRODUCTIONS</span>
 
@@ -19,6 +19,10 @@
 <br>
 <div style="float: right"><button onclick="LogIn()">Log In</button><button onclick="LogOut()">Log Out</button></div>
 <span id="loading_l" style="color: gray">Loading Game...</span>
+<div id="gamemode_d" style="visibility: hidden">
+<span style="color: gray">Game Mode: </span><span id="gamemode_l" style="color: gray"></span>
+</div>
+
 
 
 <br><br>
@@ -27,6 +31,7 @@
   <br><button onclick="CreateGame()">Create Game</button><input id="gameCreate_i"><input id="map_i">
 </div>
 <button style="visibility: hidden" onclick="LeaveGame()" id="menuControlsExit">Leave Game</button>
+<div id="replaceDiv"></div>
 
 <div id="pBox"></div>
 

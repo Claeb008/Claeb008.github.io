@@ -1,0 +1,8 @@
+{
+  "name": "mysql-test",
+  "version": "0.0.1",
+  "description": "my first mysql app",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
+}
