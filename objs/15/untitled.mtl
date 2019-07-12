@@ -8,7 +8,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd D:\Blendmation\2019\2.png
+map_Kd ..\Play\BackgroundTest.png
 
 newmtl None_NONE
 Ns 0
