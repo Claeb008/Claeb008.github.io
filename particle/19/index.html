@@ -8,8 +8,69 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
+    <div id="ops">
+        <div id="toggle">Options:</div>
+        <div id="cont">
+            <span>Set resolution scale: <input id="i_res" type="number" step="1" min="1" value="1"></span>
+            <span><button id="b_clear">Clear</button></span>
+            <span>Spawn:</span>
+            <div style="margin-left:40px">
+                <span>Amount: <input id="i_amt" type="number" value="1000" min="1"></span>
+                <span><button id="b_spawnCircle">Circle</button></span>
+                <span><button id="b_spawnRandom">Random</button></span>
+                <span><button id="b_spawnGrid">Grid</button></span>
+            </div>
+
+            <span>Center of gravity:</span>
+            <div style="margin-left:20px">
+                <span>Show? <input id="cb_showCenter" type="checkbox"></span>
+                <input type="radio" id="r_screen" name="centerPos" value="Screen Center">
+                <label for="r_screen">Screen Center</label><br>
+                <input checked type="radio" id="r_mouse" name="centerPos" value="Mouse">
+                <label for="r_mouse">Mouse</label><br>
+                <input type="radio" id="r_point" name="centerPos" value="Point">
+                <label for="r_point">Point</label><br>
+                <span style="margin-left:10px">X pos (0 to 1) <input id="i_xpos" style="width:90px" type="number" value="0.5"></span>
+                <span style="margin-left:10px">Y pos (0 to 1) <input id="i_ypos" style="width:90px" type="number" value="0.5"></span>
+            </div>
+
+            <span>Color: <input id="i_color" type="color"></span>
+            <span>Background Color: <input id="i_bgCol" type="color"></span>
+            
+            <span>Has max velocity? <input id="cb_maxVel" type="checkbox"></span>
+            <span style="margin-left:20px">Max velocity (pixels/sec): <input id="i_maxVel" type="number" value="2" min="0"></span>
+            <span>Has min velocity? <input id="cb_minVel" type="checkbox"></span>
+            <span style="margin-left:20px">Min velocity (pixels/sec): <input id="i_minVel" type="number" value="2" min="0"></span>
+
+            <span>Distance Calculation:</span>
+            <div style="margin-left:20px">
+                <input checked type="radio" id="r_circle" name="distCalc" value="Circle">
+                <label for="r_circle">Circle</label><br>
+                <input type="radio" id="r_diamond" name="distCalc" value="Diamond">
+                <label for="r_diamond">Diamond</label><br>
+            </div>
+            
+            <span>Constelation: <input id="cb_const" type="checkbox"></span>
+
+            <span>Rotation:</span>
+            <div style="margin-left:20px">
+                <span>Rate (rad/sec): <input id="i_rotRate" type="number" value="0"></span>
+                <span>Spring rotation (0 for none) <input id="i_springRate" type="number" value="0"></span>
+            </div>
+
+            <span>Glow:</span>
+            <div style="margin-left:20px">
+                <span>Enabled? <input id="cb_glow" type="checkbox"></span>
+                <span>Color: <input id="i_glowCol" type="color"></span>
+                <span>Radius: <input id="i_glowRad" type="number" min="0" value="6"></span>
+                <span>Opacity (0 to 1): <input id="i_glowOp" type="number" min="0" max="1" value="1"></span>
+            </div>
+        </div>
+    </div>
     <canvas id="can"></canvas>
     <script src="NobsinEngine.js"></script>
     <script src="main.js"></script>
+    <script src="control.js"></script>
+    <script src="cool.js"></script>
 </body>
 </html>
