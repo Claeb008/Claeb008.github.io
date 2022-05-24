@@ -65,15 +65,6 @@ const Shapes = {
 };
 var shape = Shapes.pixel;
 
-//Physics
-const PMode = {
-    space:0,
-    gravity:1
-};
-var pMode = 0;
-var pModes = [0];
-var bounce = false;
-
 //////////////
 
 cb_showCenter.onclick = function(){
@@ -107,27 +98,6 @@ i_ypos.onkeydown = function(e){
     else if(this.value < 0) this.value = 0;
     gravityPY = this.value;
     if(gravityCenter == GravityCenter.point) cy = nob.height*gravityPY;
-};
-
-//
-
-cb_maxVel.onclick = function(){
-    useMaxVel = this.checked;
-};
-cb_minVel.onclick = function(){
-    useMinVel = this.checked;
-};
-i_maxVel.onkeydown = function(e){
-    if(e.key.toLowerCase() != "enter") return;
-    this.value = parseFloat(this.value);
-    if(this.value < 0) this.value = Math.abs(this.value);
-    maxVel = this.value;
-};
-i_minVel.onkeydown = function(e){
-    if(e.key.toLowerCase() != "enter") return;
-    this.value = parseFloat(this.value);
-    if(this.value < 0) this.value = Math.abs(this.value);
-    minVel = this.value;
 };
 
 function toggleGlow(){
